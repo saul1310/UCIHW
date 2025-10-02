@@ -1,25 +1,57 @@
 #include <iostream>  // Include the input/output library
+#include <fstream>
 using namespace std;
 #include <map>
 #include <string>
 
-// map<string, int> freq;
+
+string strip(string) {
+    //take in an input line
+    string test ="every day, i wonder why!"
+    // iterate through every character, if its in the blacklist, remove
+    //return back the stripped string
 
 
-
-// establish a frequency map hashtable
-
-map<int,string> createFrequencyMap {
-    // establish a string variable to hold the current string
-    // find, specify file to be worked onexit
-    // establish a connection into it with ifstream
-    // load line by line into a string variable
-    // strip of punctuation marks 
-    // run each word through the frequency map
 
 
 
 }
+
+
+// establish a frequency map hashtable
+
+map<string,int> createFrequencyMap(){
+    map<string,int> frequencymap;
+    // ask user for input 
+    ifstream file("testwords.txt");
+    if (!file.is_open()) {
+        cout << "Could not open file!" << endl;
+        return {};
+    }
+
+    string line;
+    // strip of punctuation marks 
+
+
+    while (getline(file,line)){
+        cout << line << endl;
+
+
+    }
+
+    file.close();
+   
+
+   
+  
+
+
+    // run each word through the frequency map
+    return frequencymap;
+
+
+
+};
 
 
 
@@ -31,7 +63,7 @@ map<int,string> createFrequencyMap {
 
 
 int main() {
-    cout << "hey";
+    createFrequencyMap();
  
     return 0;
 }
