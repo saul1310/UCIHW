@@ -7,17 +7,21 @@ string test ="every day, i wonder why!";
 
 
 string strip(const string& input) {
-    string blacklist = ".,!-+=&?"
+    string blacklist = ".,!-+=&?";
     //take in an input line
     string rawWord = input;
  
     // iterate through every character, if its in the blacklist, remove
     for (int i =0; i < rawWord.length(); i++ ) {
-        if rawWord[i]
+        if (blacklist.find(rawWord[i]) != string::npos) 
+        {
+            rawWord.erase(i,1);
+
+        }
 
 
     }
-    //return back the stripped string
+    return rawWord;
 
 
 
@@ -68,10 +72,13 @@ map<string,int> createFrequencyMap(){
 // return high to low list
 
 
+//main function has to run from the command line, taking in the textfile
 
 
 int main() {
-    createFrequencyMap();
+    string test = "hey, my name is joe!";
+    // createFrequencyMap();
+    cout << strip(test);
  
     return 0;
 }
