@@ -6,20 +6,18 @@ using namespace std;
 string test ="every day, i wonder why!";
 
 
+/* Takes in a line of text as a string, returns the line strpped of punctuation*/
 string strip(const string& input) {
     string blacklist = ".,!-+=&?";
-    //take in an input line
     string rawWord = input;
- 
-    // iterate through every character, if its in the blacklist, remove
-    for (int i =0; i < rawWord.length(); i++ ) {
+    for (int i =0; i < rawWord.length();){
         if (blacklist.find(rawWord[i]) != string::npos) 
         {
             rawWord.erase(i,1);
-
         }
-
-
+        else{
+            i++;
+        }
     }
     return rawWord;
 
@@ -76,7 +74,7 @@ map<string,int> createFrequencyMap(){
 
 
 int main() {
-    string test = "hey, my name is joe!";
+    string test = "hey, my !!!!!&name is joe!";
     // createFrequencyMap();
     cout << strip(test);
  
