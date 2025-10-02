@@ -3,19 +3,27 @@
 using namespace std;
 #include <map>
 #include <string>
+string test ="every day, i wonder why!";
 
 
-string strip(string) {
+string strip(const string& input) {
+    string blacklist = ".,!-+=&?"
     //take in an input line
-    string test ="every day, i wonder why!"
+    string rawWord = input;
+ 
     // iterate through every character, if its in the blacklist, remove
+    for (int i =0; i < rawWord.length(); i++ ) {
+        if rawWord[i]
+
+
+    }
     //return back the stripped string
 
 
 
 
 
-}
+};
 
 
 // establish a frequency map hashtable
