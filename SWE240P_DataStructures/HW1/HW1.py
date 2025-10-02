@@ -17,9 +17,18 @@
 # Users must be sorted by their ID in the linked list. 
 
 class Node:
-    def __init__(self,data):
-        self.data = data
+    _currentIDNum = 0
+    def __init__(self,name,address,ss,balance,id):
+        self.name = name
         self.next = None
+        self.address = address
+        self.ss = ss
+        self.balance = balance
+        self.id = Node._currentIDNum
+        Node._currentIDNum +=1
+
+def uniqueid():
+
 
 node1 = Node(15)
 node2 = Node(3)
