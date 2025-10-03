@@ -36,6 +36,7 @@ string strip(const string& input) {
     return convertToLowerCase(rawWord); 
 };
 
+/* Takes in a line and returns words individually*/
 vector<string> split(const string& s, char delimiter = ' ') {
     vector<string> tokens;
     string token;
@@ -63,8 +64,12 @@ map<string,int> createFrequencyMap(){
     while (getline(file,line)){
 
         string stripped = strip(line);
+        // feed the stripped line into the split function
+        //that returns a vector of the spit words
+        // iterate through this vector into the hashmap
 
-        // while (int i = 0; i < line.length();i++){
+
+       
 
 
         
@@ -101,7 +106,7 @@ int main() {
 
     createFrequencyMap();
     string test = "this is a test yeah";
-     vector<string> words = split(test);
+    vector<string> words = split(test);
 
     // print each word
     for (const auto& w : words) {
