@@ -36,7 +36,7 @@ string strip(const string& input) {
     return convertToLowerCase(rawWord); 
 };
 
-/* Takes in a line and returns words individually*/
+/* Takes in a line and returns a vector of words*/
 vector<string> split(const string& s, char delimiter = ' ') {
     vector<string> tokens;
     string token;
@@ -74,7 +74,7 @@ map<string,int> createFrequencyMap(){
 
         
 
-        // at this part the line must be turned into individual words and then ran through themap
+        // I think the file reader should be in a different function, the map one just creates map and runs an input through it
 
 
     } 
