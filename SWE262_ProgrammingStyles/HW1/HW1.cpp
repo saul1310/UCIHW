@@ -1,11 +1,11 @@
-#include <iostream>  // Include the input/output library
+#include <iostream> 
 #include <fstream>
-using namespace std;
 #include <map>
 #include <string>
 #include <cctype> 
 #include <sstream>
 #include <vector>
+using namespace std;
 
 
 /* Returns lowercase conversion*/
