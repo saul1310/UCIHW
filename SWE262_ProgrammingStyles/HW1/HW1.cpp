@@ -33,8 +33,8 @@ string strip(const string& input) {
             i++;
         }
     }
-    return convertToLowerCase(rawWord); 
-};
+    return rawWord;
+}
 
 /* Takes in a line and returns a vector of words*/
 vector<string> split(const string& s, char delimiter = ' ') {
@@ -48,7 +48,7 @@ vector<string> split(const string& s, char delimiter = ' ') {
         }
     }
     return tokens;
-};
+}
 
 // establish a frequency map hashtable
 
@@ -63,18 +63,22 @@ map<string,int> createFrequencyMap(){
     string line;
     while (getline(file,line)){
 
-        string stripped = strip(line);
-        // feed the stripped line into the split function
-        //that returns a vector of the spit words
-        // iterate through this vector into the hashmap
-
-
+        line = strip(line);
+        line = convertToLowerCase(line);
+        vector<string> words = split(line);
+        for (const auto& w : words) {
+            if (frequencymap.find(w) != frequencymap.end()) {
+                frequencymap[w]++;
+            } else {
+                frequencymap[w] = 1;
+            }
+        }
        
 
 
         
 
-        // I think the file reader should be in a different function, the map one just creates map and runs an input through it
+       
 
 
     } 
@@ -85,12 +89,15 @@ map<string,int> createFrequencyMap(){
   
 
 
-    // run each word through the frequency map
-    return frequencymap;
+
+  
+    cout << "Word Frequency Map: " << endl;
+    for (const auto& pair : frequencymap) {
+        cout << pair.first << ": " << pair.second << endl;
 
 
-
-};
+    };
+}
 
 
 
@@ -105,16 +112,6 @@ map<string,int> createFrequencyMap(){
 int main() {
 
     createFrequencyMap();
-    string test = "this is a test yeah";
-    vector<string> words = split(test);
-
-    // print each word
-    for (const auto& w : words) {
-        cout << w << endl;
-    }
-
-    
- 
     return 0;
 }
 
