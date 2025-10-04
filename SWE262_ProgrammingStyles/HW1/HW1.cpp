@@ -19,6 +19,14 @@ string convertToLowerCase(string& input) {
     return lowerCase;
 }
 
+// vector returnStopWords(vector& input){
+
+
+
+
+
+// }
+
 
 /* Takes in a line of text as a string, returns the line strpped of punctuation*/
 string strip(const string& input) {
@@ -65,7 +73,9 @@ map<string,int> createFrequencyMap(){
 
         line = strip(line);
         line = convertToLowerCase(line);
+        
         vector<string> words = split(line);
+        // call a function to remove stop words from a vector of words
         for (const auto& w : words) {
             if (frequencymap.find(w) != frequencymap.end()) {
                 frequencymap[w]++;
