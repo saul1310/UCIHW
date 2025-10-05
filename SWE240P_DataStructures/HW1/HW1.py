@@ -16,9 +16,10 @@
 # where each account is a node in the list.
 # Users must be sorted by their ID in the linked list. 
 
+#  initialization of node class
 class Node:
     _currentIDNum = 0
-    def __init__(self,name,address,ss,balance,id):
+    def __init__(self,name,address,ss,balance,):
         self.name = name
         self.next = None
         self.address = address
@@ -27,21 +28,42 @@ class Node:
         self.id = Node._currentIDNum
         Node._currentIDNum +=1
 
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def add_node(self,name,address,ss,balance):
+        new_node = Node(name,address,ss,balance)
+
+        if self.head == None:
+            self.head = new_node
+        else:
+            current=self.head
+            while current.next is not None:
+                current = current.next
+            current.next = new_node
 
 
 
-node1 = Node(15)
-node2 = Node(3)
-node3 = Node(234)
 
-node1.next = node2
-node2.next = node3
 
-head = node1
 
-current = head
+
+
+
+
+
+
+LL = LinkedList()
+LL.add_node("flannigan","55 maple drive",135548399,10000)
+LL.add_node("flannigans brother ","77 maple drive",135548398,10000)
+current = LL.head
+
 while current:
-    print(current.data, "-->")
+    print(current.name,current.id, "-->")
     current = current.next
 
 print("Null")
+
+
+""" Test Cases"""
