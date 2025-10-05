@@ -66,6 +66,40 @@ class LinkedList:
             toBeDeleted = current.next
             current.next = current.next.next
             toBeDeleted.next = None
+
+# Task-4: Write a method/function 
+# payUserToUser(payer ID, payee ID, amount) 
+# that lets the user with ID1 pay the user with ID3 by amount.
+    def payUserToUser(self,payerID,payeeID,amount):
+        if payeeID == payerID:
+            print("Cannot initiate transaction between the same account")
+
+        current = LL.head
+        completion_check = 0
+        while current:
+            
+            if current.id == payeeID:
+                payee = current
+                completion_check +=1
+            if current.id == payerID:
+                payer = current
+                completion_check +=1
+
+            if completion_check == 2:
+                break
+            current = current.next
+
+
+        if amount > payer.balance:
+            print("The requested transaction could not be completed")
+            print("The specified account does not have the required balance")
+            return 
+        payer.balance -= amount
+        payee.balance += amount
+        print("Transfer Complete")
+        
+
+
             
             
             
@@ -91,9 +125,9 @@ class LinkedList:
 
 "Adding new user"
 LL = LinkedList()
-LL.addUser("flannigan","55 maple drive",135548399,10000)
-LL.addUser("flannigans brother ","77 maple drive",135548398,10000)
-LL.addUser("flannigans OTHER  brother ","79 maple drive",135548393,10000)
+LL.addUser("flannigan","55 maple drive",135548399,50)
+LL.addUser("flannigans brother ","77 maple drive",435335,50)
+LL.addUser("flannigans OTHER  brother ","79 maple drive",135548393,90)
 current = LL.head
 
 
@@ -121,6 +155,29 @@ while current:
     current = current.next
 
 print("Null")
+LL.addUser("flannigans OTHER  brother ","79 maple drive",135548393,10000)
+print("---end of test ---")
+
+
+""" Task4-payUser-test"""
+print("intiating a payment from user 0 to user 1")
+current = LL.head
+while current:
+    print(current.id,"balance =",current.balance, "-->")
+    current = current.next
+
+print("Null")
+
+print("after the payment is complete user 0 should have 25 dollars, and user 1 should have 75")
+LL.payUserToUser(0,1,25)
+
+current = LL.head
+while current:
+    print(current.id,"balance =",current.balance, "-->")
+    current = current.next
+
+print("Null")
+
 
 # notes
 #add something to verify ss number lengths, as well as avoid dupes in the list
