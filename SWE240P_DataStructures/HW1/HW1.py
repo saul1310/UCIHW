@@ -32,17 +32,45 @@ class LinkedList:
     def __init__(self):
         self.head = None
 
-    def add_node(self,name,address,ss,balance):
+    def addUser(self,name,address,ss,balance):
         new_node = Node(name,address,ss,balance)
 
         if self.head == None:
             self.head = new_node
         else:
+            #implement a checking function to see if the id is not current.id +1, if so theres a blank spot where the node should go
+            #an edge case could be if the first node doesnt have a id, could be checked easily with "if head.id != 0"
             current=self.head
             while current.next is not None:
+                # check to see if there is an empty space in between id's
+                if current.next and current.next.id> current.id +1:
+                    new_node.id = current.id +1
+                    new_node.next = current.next
+                    current.next = new_node
+                    break
+                    
+        
                 current = current.next
             current.next = new_node
 
+    def deleteUser(self,id):
+        current = self.head
+        #if id is associated with head
+        if current.id == id:
+            self.head == current.next
+            current.next = None
+
+        else:
+            while current.next.id != id:
+                current = current.next
+            toBeDeleted = current.next
+            current.next = current.next.next
+            toBeDeleted.next = None
+            
+            
+            
+
+        
 
 
 
@@ -54,10 +82,39 @@ class LinkedList:
 
 
 
+
+
+
+
+
+""" Test Cases"""
+
+"Adding new user"
 LL = LinkedList()
-LL.add_node("flannigan","55 maple drive",135548399,10000)
-LL.add_node("flannigans brother ","77 maple drive",135548398,10000)
+LL.addUser("flannigan","55 maple drive",135548399,10000)
+LL.addUser("flannigans brother ","77 maple drive",135548398,10000)
+LL.addUser("flannigans OTHER  brother ","79 maple drive",135548393,10000)
 current = LL.head
+
+
+while current:
+    print(current.name,current.id, "-->")     
+    current = current.next
+
+print("Null")
+print("---end of test---")
+
+""" deleteuser"""
+#add something in here to add a new user after one is deleted to make sure the open id is taken
+
+
+LL.deleteUser(2)
+
+
+
+
+current = LL.head
+
 
 while current:
     print(current.name,current.id, "-->")
@@ -65,5 +122,5 @@ while current:
 
 print("Null")
 
-
-""" Test Cases"""
+# notes
+#add something to verify ss number lengths, as well as avoid dupes in the list
