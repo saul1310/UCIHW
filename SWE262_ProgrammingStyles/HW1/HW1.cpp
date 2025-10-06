@@ -5,46 +5,34 @@
 #include <cctype> 
 #include <sstream>
 #include <vector>
+#include <unordered_set>
 using namespace std;
 
-
-/* Returns lowercase conversion*/
+/* Converts a string to lowercase */
 string convertToLowerCase(string& input) {
-    string lowerCase = "";
+    string lowerCase;
     lowerCase.reserve(input.size()); 
-
-    for (size_t i = 0; i < input.size(); i++) {
-        lowerCase += tolower(static_cast<unsigned char>(input[i]));
+    for (char c : input) {
+        lowerCase += tolower(static_cast<unsigned char>(c));
     }
     return lowerCase;
 }
 
-// vector returnStopWords(vector& input){
-
-
-
-
-
-// }
-
-
-/* Takes in a line of text as a string, returns the line strpped of punctuation*/
+/* Removes punctuation from a string */
 string strip(const string& input) {
-    string blacklist = ".,!-+=&?'";
+    string blacklist = ".,!-+=&?'\";:()[]{}";
     string rawWord = input;
-    for (int i =0; i < rawWord.length();){
-        if (blacklist.find(rawWord[i]) != string::npos) 
-        {
-            rawWord.erase(i,1);
-        }
-        else{
+    for (size_t i = 0; i < rawWord.length();) {
+        if (blacklist.find(rawWord[i]) != string::npos) {
+            rawWord.erase(i, 1);
+        } else {
             i++;
         }
     }
     return rawWord;
 }
 
-/* Takes in a line and returns a vector of words*/
+/* Splits a string into tokens by a delimiter */
 vector<string> split(const string& s, char delimiter = ' ') {
     vector<string> tokens;
     string token;
@@ -58,71 +46,63 @@ vector<string> split(const string& s, char delimiter = ' ') {
     return tokens;
 }
 
-// establish a frequency map hashtable
+/* Loads stopwords from stopwords.txt into a set */
+unordered_set<string> loadStopWords(const string& filename) {
+    unordered_set<string> stopWords;
+    ifstream file("stop_words.txt");
+    string line, word;
 
-map<string,int> createFrequencyMap(){
-    map<string,int> frequencymap;
-    // ask user for input 
-    ifstream file("testwords.txt");
-    if (!file.is_open()) {
-        cout << "Could not open file!" << endl;
-        return {};
-    }
-    string line;
-    while (getline(file,line)){
-
-        line = strip(line);
-        line = convertToLowerCase(line);
-        
-        vector<string> words = split(line);
-        // call a function to remove stop words from a vector of words
-        for (const auto& w : words) {
-            if (frequencymap.find(w) != frequencymap.end()) {
-                frequencymap[w]++;
-            } else {
-                frequencymap[w] = 1;
+    if (file.is_open()) {
+        while (getline(file, line)) {
+            stringstream ss(line);
+            while (getline(ss, word, ',')) {
+                word = strip(word);
+                word = convertToLowerCase(word);
+                stopWords.insert(word);
             }
         }
-       
+        file.close();
+    } else {
+        cerr << "Could not open stopword file.\n";
+    }
+    return stopWords;
+}
 
+/* Creates a frequency map while filtering out stopwords */
+map<string,int> createFrequencyMap() {
+    map<string,int> frequencymap;
+    unordered_set<string> stopWords = loadStopWords("stopwords.txt");
 
-        
+    ifstream file("testwords.txt");
+    if (!file.is_open()) {
+        cout << "Could not open testwords.txt!" << endl;
+        return {};
+    }
 
-       
+    string line;
+    while (getline(file, line)) {
+        line = strip(line);
+        line = convertToLowerCase(line);
+        vector<string> words = split(line);
 
-
-    } 
+        for (const auto& w : words) {
+            if (stopWords.find(w) == stopWords.end()) { // not a stopword
+                frequencymap[w]++;
+            }
+        }
+    }
     file.close();
-   
 
-   
-  
-
-
-
-  
     cout << "Word Frequency Map: " << endl;
     for (const auto& pair : frequencymap) {
         cout << pair.first << ": " << pair.second << endl;
+    }
 
-
-    };
+    return frequencymap;
 }
 
-
-
-
-// convert freq map into a list going from highest frequency to lowest
-// return high to low list
-
-
-//main function has to run from the command line, taking in the textfile
-
-
+/* Main */
 int main() {
-
     createFrequencyMap();
     return 0;
 }
-
-    
