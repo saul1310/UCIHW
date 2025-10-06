@@ -103,7 +103,7 @@ map<string,int> createFrequencyMap(const string& filename) {
     return frequencymap;
 }
 
-/* Main */
+
 int main(int argc, char* argv[]) {
     string filename;
 
