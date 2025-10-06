@@ -46,8 +46,8 @@ vector<string> split(const string& s, char delimiter = ' ') {
     return tokens;
 }
 
-/* Loads stopwords from stopwords.txt into a set */
-unordered_set<string> loadStopWords(const string& filename) {
+/* Loads stopwords from stop_words.txt into a set */
+unordered_set<string> loadStopWords() {
     unordered_set<string> stopWords;
     ifstream file("stop_words.txt");
     string line, word;
@@ -58,24 +58,26 @@ unordered_set<string> loadStopWords(const string& filename) {
             while (getline(ss, word, ',')) {
                 word = strip(word);
                 word = convertToLowerCase(word);
-                stopWords.insert(word);
+                if (!word.empty()) {
+                    stopWords.insert(word);
+                }
             }
         }
         file.close();
     } else {
-        cerr << "Could not open stopword file.\n";
+        cerr << "Could not open stop_words.txt.\n";
     }
     return stopWords;
 }
 
 /* Creates a frequency map while filtering out stopwords */
-map<string,int> createFrequencyMap() {
+map<string,int> createFrequencyMap(const string& filename) {
     map<string,int> frequencymap;
-    unordered_set<string> stopWords = loadStopWords("stopwords.txt");
+    unordered_set<string> stopWords = loadStopWords();
 
-    ifstream file("testwords.txt");
+    ifstream file(filename);
     if (!file.is_open()) {
-        cout << "Could not open testwords.txt!" << endl;
+        cout << "Could not open " << filename << "!" << endl;
         return {};
     }
 
@@ -86,14 +88,14 @@ map<string,int> createFrequencyMap() {
         vector<string> words = split(line);
 
         for (const auto& w : words) {
-            if (stopWords.find(w) == stopWords.end()) { // not a stopword
+            if (stopWords.find(w) == stopWords.end()) {
                 frequencymap[w]++;
             }
         }
     }
     file.close();
 
-    cout << "Word Frequency Map: " << endl;
+    cout << "Word Frequency Map for " << filename << ":\n";
     for (const auto& pair : frequencymap) {
         cout << pair.first << ": " << pair.second << endl;
     }
@@ -102,7 +104,16 @@ map<string,int> createFrequencyMap() {
 }
 
 /* Main */
-int main() {
-    createFrequencyMap();
+int main(int argc, char* argv[]) {
+    string filename;
+
+    if (argc > 1) {
+        filename = argv[1]; // read from command line
+    } else {
+        cout << "Enter the name of the file to analyze: ";
+        cin >> filename;
+    }
+
+    createFrequencyMap(filename);
     return 0;
 }
