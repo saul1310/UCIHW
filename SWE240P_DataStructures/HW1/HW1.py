@@ -52,13 +52,13 @@ class LinkedList:
         # insert into the linked list while maintaining order by id
         if self.head is None:
             self.head = new_node
-            return
+            return new_node.id
 
         # if new node should become new head
         if new_node.id < self.head.id:
             new_node.next = self.head
             self.head = new_node
-            return
+            return new_node.id
 
         current = self.head
         while current.next is not None and current.next.id < new_node.id:
@@ -67,6 +67,7 @@ class LinkedList:
         # insert after current
         new_node.next = current.next
         current.next = new_node
+        return new_node.id
 
     def deleteUser(self, id):
         current = self.head
@@ -76,7 +77,7 @@ class LinkedList:
             print("List is empty.")
             return
 
-        #
+        
         if current.id == id:
             self.head = current.next
             # reclaim the id
@@ -143,6 +144,38 @@ class LinkedList:
             return (current.id + current.next.id)/2
         else:
             return current.id
+        
+    
+    def mergeAccounts(self,ID1,ID2):
+        if ID1 == ID2:
+            print("Cannot merge the same account")
+            return 
+        current = self.head
+        account1 = None
+        account2 = None
+        while current:
+            if ID1 == current.id:
+                account1 = current
+            if ID2 == current.id:
+                account2 = current
+            current = current.next
+        if not account1 or not account2:
+            print("One or both accounts not found.")
+            return
+        #make sure all prereqs for merging are met
+        if account1.name == account2.name and account1.address == account2.address and account1.ss == account2.ss:
+            toKeep = account1 if account1.id < account2.id else account2
+            toDelete = account2 if toKeep is account1 else account1
+            toKeep.balance += toDelete.balance
+            self.deleteUser(toDelete.id)
+            print(f"Accounts {ID1} and {ID2} merged successfully into ID {toKeep.id}.")
+
+           
+
+        else:
+            print("unable to merge accounts")
+
+        
         
 
 
@@ -254,6 +287,51 @@ print("Null")
 
 """ Task5-median test"""
 print("median id is:",LL.getMedianID())
+
+""" Task6 - Merge Accounts Test """
+
+print("\n--- Task6: mergeAccounts test ---")
+
+# Clear existing list and start fresh
+LL = LinkedList()
+
+# Add two users with identical info (should be mergeable)
+id_a1 = LL.addUser("Alice", "123 Main St", 999111222, 50)
+id_a2 = LL.addUser("Alice", "123 Main St", 999111222, 100)
+
+# Add a third user with different info (should not merge)
+id_b = LL.addUser("Bob", "999 Elm St", 888777666, 200)
+
+# Display current accounts
+print("Before merge:")
+current = LL.head
+while current:
+    print(f"ID={current.id}, Name={current.name}, Balance={current.balance}")
+    current = current.next
+
+# Attempt valid merge (the two Alice accounts should merge)
+print(f"\nMerging accounts {id_a1} and {id_a2} (should succeed):")
+LL.mergeAccounts(id_a1, id_a2)
+
+# Show updated list
+current = LL.head
+while current:
+    print(f"ID={current.id}, Name={current.name}, Balance={current.balance}")
+    current = current.next
+
+# Attempt invalid merge (Alice and Bob have different details)
+print(f"\nMerging accounts {id_a1} and {id_b} (should fail):")
+LL.mergeAccounts(id_a1, id_b)
+
+# Show final list
+print("\nFinal list after merge attempts:")
+current = LL.head
+while current:
+    print(f"ID={current.id}, Name={current.name}, Balance={current.balance}")
+    current = current.next
+print("Null")
+
+print("--- end of Task6 test ---")
 
 
 # notes
