@@ -17,64 +17,95 @@
 # Users must be sorted by their ID in the linked list. 
 
 #  initialization of node class
+import heapq
+
 class Node:
     _currentIDNum = 0
-    def __init__(self,name,address,ss,balance,):
+    # min-heap of reclaimed ids available for reuse
+    _free_ids = []
+
+    def __init__(self, name, address, ss, balance, id=None):
         self.name = name
         self.next = None
         self.address = address
         self.ss = ss
         self.balance = balance
-        self.id = Node._currentIDNum
-        Node._currentIDNum +=1
+        # If an id is provided (reused), take it. Otherwise allocate a new id.
+        if id is not None:
+            self.id = id
+        else:
+            self.id = Node._currentIDNum
+            Node._currentIDNum += 1
 
 class LinkedList:
     def __init__(self):
         self.head = None
 
     def addUser(self,name,address,ss,balance):
-        new_node = Node(name,address,ss,balance)
+       
+        if Node._free_ids:
+            id_to_use = heapq.heappop(Node._free_ids)
+            new_node = Node(name, address, ss, balance, id=id_to_use)
+        else:
+            new_node = Node(name, address, ss, balance)
 
-        if self.head == None:
+        # insert into the linked list while maintaining order by id
+        if self.head is None:
             self.head = new_node
-        else:
-            #implement a checking function to see if the id is not current.id +1, if so theres a blank spot where the node should go
-            #an edge case could be if the first node doesnt have a id, could be checked easily with "if head.id != 0"
-            current=self.head
-            while current.next is not None:
-                # check to see if there is an empty space in between id's
-                if current.next and current.next.id> current.id +1:
-                    new_node.id = current.id +1
-                    new_node.next = current.next
-                    current.next = new_node
-                    break
-                    
-        
-                current = current.next
-            current.next = new_node
+            return
 
-    def deleteUser(self,id):
+        # if new node should become new head
+        if new_node.id < self.head.id:
+            new_node.next = self.head
+            self.head = new_node
+            return
+
         current = self.head
-        #if id is associated with head
+        while current.next is not None and current.next.id < new_node.id:
+            current = current.next
+
+        # insert after current
+        new_node.next = current.next
+        current.next = new_node
+
+    def deleteUser(self, id):
+        current = self.head
+        
+   
+        if current is None:
+            print("List is empty.")
+            return
+
+        #
         if current.id == id:
-            self.head == current.next
+            self.head = current.next
+            # reclaim the id
+            heapq.heappush(Node._free_ids, current.id)
             current.next = None
+            return
 
-        else:
-            while current.next.id != id:
-                current = current.next
-            toBeDeleted = current.next
-            current.next = current.next.next
-            toBeDeleted.next = None
+       
+        while current.next is not None and current.next.id != id:
+            current = current.next
 
-# Task-4: Write a method/function 
-# payUserToUser(payer ID, payee ID, amount) 
-# that lets the user with ID1 pay the user with ID3 by amount.
+   
+        if current.next is None:
+            print("User not found.")
+            return
+
+     
+        toBeDeleted = current.next
+        current.next = toBeDeleted.next
+        # reclaim the id from the deleted node so it can be reused
+        heapq.heappush(Node._free_ids, toBeDeleted.id)
+        toBeDeleted.next = None
+
+
     def payUserToUser(self,payerID,payeeID,amount):
         if payeeID == payerID:
             print("Cannot initiate transaction between the same account")
 
-        current = LL.head
+        current = self.head
         completion_check = 0
         while current:
             
@@ -97,6 +128,21 @@ class LinkedList:
         payer.balance -= amount
         payee.balance += amount
         print("Transfer Complete")
+
+    def getMedianID(self):
+        current = self.head
+        count = 0
+        while current:
+            count +=1
+            current = current.next
+        median_index = count//2
+        current = self.head
+        for i in range(median_index):
+            current = current.next
+        if count %2 ==0:
+            return (current.id + current.next.id)/2
+        else:
+            return current.id
         
 
 
@@ -177,6 +223,37 @@ while current:
     current = current.next
 
 print("Null")
+
+print("---end of test---")
+
+""" Task5-median test"""
+
+print("deleting all nodes and adding new ones to test median function")
+
+while LL.head:
+    LL.deleteUser(LL.head.id)  
+print("nodes deleted") 
+
+
+LL = LinkedList()
+
+LL.addUser("user0","address0",111111111,10)
+LL.addUser("user1","address1",111111112,10)
+LL.addUser("user2","address2",111111113,10)
+LL.addUser("user3","address3",111111114,10)
+LL.addUser("user4","address4",111111115,10)
+LL.addUser("user5","address5",111111116,10)
+LL.addUser("user6","address6",111111117,10)
+current = LL.head
+while current:
+    print(current.id,"balance =",current.balance, "-->")
+    current = current.next
+
+print("Null")
+
+
+""" Task5-median test"""
+print("median id is:",LL.getMedianID())
 
 
 # notes
