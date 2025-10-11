@@ -21,18 +21,32 @@ import heapq
 
 
 class Node:
+    """A node representing a bank account.
+
+    Class variables:
+    - _currentIDNum: next sequential id to assign when no reclaimed ids.
+    - _free_ids: min-heap of reclaimed ids available for reuse.
+    """
     _currentIDNum = 0
     _free_ids = []
 
     def __init__(self, name, address, ss, balance, id=None):
+        """Create a node. If `id` provided, use it; otherwise allocate a new id.
+
+        The optional `id` parameter is used when reusing an id from the
+        reclaimed pool or when intentionally creating a node with a specific id
+        (used by mergeBanks).
+        """
         self.name = name
         self.next = None
         self.address = address
         self.ss = ss
         self.balance = balance
         if id is not None:
+            # Use a supplied id (reused or forced)
             self.id = id
         else:
+            # Allocate next sequential id
             self.id = Node._currentIDNum
             Node._currentIDNum += 1
 
@@ -42,10 +56,18 @@ class LinkedList:
         self.head = None
 
     def addUser(self, name, address, ss, balance):
+        """Add a new user and keep the linked list ordered by id.
+
+        Reuse the smallest reclaimed id if available (pop from min-heap). The
+        function returns the assigned id so callers/tests can use the actual id
+        (important because ids might be reused and not always sequential).
+        """
         if Node._free_ids:
+            # Reuse smallest available reclaimed id
             id_to_use = heapq.heappop(Node._free_ids)
             new_node = Node(name, address, ss, balance, id=id_to_use)
         else:
+            # Allocate a fresh sequential id
             new_node = Node(name, address, ss, balance)
 
         if self.head is None:
@@ -67,7 +89,8 @@ class LinkedList:
 
     def deleteUser(self, id):
         current = self.head
-
+        # Standard linked-list delete. On successful delete push the freed id
+        # into the reclaimed-id min-heap so it may be reused by future addUser
         if current is None:
             print("List is empty.")
             return
@@ -87,10 +110,16 @@ class LinkedList:
 
         toBeDeleted = current.next
         current.next = toBeDeleted.next
+        # Reclaim the id for reuse
         heapq.heappush(Node._free_ids, toBeDeleted.id)
         toBeDeleted.next = None
 
     def payUserToUser(self, payerID, payeeID, amount):
+        """Transfer amount from payer to payee.
+
+        Looks up both accounts in a single traversal. Prints messages and
+        returns early if accounts are missing or payer has insufficient funds.
+        """
         if payeeID == payerID:
             print("Cannot initiate transaction between the same account")
             return
@@ -121,6 +150,12 @@ class LinkedList:
         print("Transfer Complete")
 
     def getMedianID(self):
+        """Return the median id in the list.
+
+        If the list length is even this returns the average of the two
+        middle ids; if odd it returns the middle id. Returns None on empty
+        list.
+        """
         current = self.head
         count = 0
         while current:
@@ -133,11 +168,17 @@ class LinkedList:
         for i in range(median_index):
             current = current.next
         if count % 2 == 0:
+            # average of two middle ids
             return (current.id + current.next.id) / 2
         else:
             return current.id
 
     def mergeAccounts(self, ID1, ID2):
+        """Merge two accounts if their name/address/ss match.
+
+        The account with the smaller id is kept and the other is deleted; the
+        kept account's balance increases by the deleted account's balance.
+        """
         if ID1 == ID2:
             print("Cannot merge the same account")
             return
@@ -164,10 +205,20 @@ class LinkedList:
 
     @staticmethod
     def mergeBanks(bankOfOrangeCounty, bankOfLosAngeles):
+        """Merge two banks into a new LinkedList.
+
+        This preserves account data and attempts to preserve ids; when an id
+        collision is detected the smallest available reclaimed id is used or a
+        new sequential id is assigned. addUser is used to insert nodes and the
+        assigned id is then forced to the desired value by walking to the tail
+        and setting current.id (this keeps addUser's validation and ordering
+        logic while ensuring the merged id set matches the desired values).
+        """
         mergedBank = LinkedList()
         used_ids = set()
 
         def add_node_to_merged(node):
+            # Choose a new id if node.id already used in mergedBank
             if node.id in used_ids:
                 if Node._free_ids:
                     new_id = heapq.heappop(Node._free_ids)
@@ -178,7 +229,13 @@ class LinkedList:
                 new_id = node.id
 
             used_ids.add(new_id)
+
+            # Insert a copy via addUser (preserves list invariants)
             mergedBank.addUser(node.name, node.address, node.ss, node.balance)
+
+            # Force the intended id on the newly added tail node. This is a
+            # small, explicit step after insertion to ensure mergedBank contains
+            # the id we selected above.
             current = mergedBank.head
             while current.next:
                 current = current.next
