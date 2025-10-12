@@ -56,6 +56,7 @@ void loadStopWords(char *filename, struct StopWords *stopWords);
 
 // Checks if a given word is a stop word
 int isStopWord(char *word, struct StopWords *stopWords);
+  
 
 // Reads text file, extracts words, and counts frequencies
 void countWordFrequencies(char *filename, struct StopWords *stopWords, struct WordList *wordList);
@@ -77,7 +78,16 @@ void printTop25(struct WordList *wordList);
 // Main Function
 // ========================
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc < 2){
+        printf("Usage: %s<input_file\n,",argv[0]);
+        return 1;
+
+    }
+
+    char *filename = argv[1];
+    
+
     // 1. Declare file names for input text and stop words
     //    e.g., "pride-and-prejudice.txt" and "stop_words.txt"
 
