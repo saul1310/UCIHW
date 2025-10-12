@@ -34,3 +34,31 @@ s.push(20)
 print(s.peek())   # 20
 print(s.pop())    # 20
 print(s.size())   # 1
+
+# --------------------------------------------------
+
+# Task 2
+# use the python built in *, +,-,//, 
+# just write a calculator shell using these
+# and storing the data in the stack
+
+
+#input is a string
+def tokenize(input: str):
+    tokens = []
+    for input[i] in range(len(input)):
+        if i == ' ':
+            pass
+        tokens.append(i)
+
+
+
+#turn into a list of tokens from string
+
+#feed tokens into the two stacks 
+
+#evaluate stack expressions
+
+    for i in range(len(input)):
+        if i in operands:
+            operands = ['+','-'','*'','/']

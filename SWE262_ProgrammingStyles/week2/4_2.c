@@ -31,10 +31,13 @@ struct StopWords {
     int total;
 };
 
-// Structure to hold all unique words found in the text
+// Structure to hold all unique words found in the text in key value pairs 
 struct WordList {
     struct Word words[10000]; // example: up to 10,000 unique words
     int total;
+    // every time a word is encountered, search the struct for it
+    // if its found, increment its pair by 1
+    // if not, add a new key value pair
 };
 
 
@@ -59,9 +62,15 @@ void countWordFrequencies(char *filename, struct StopWords *stopWords, struct Wo
 
 // Sorts the words by frequency (descending order)
 void sortByFrequency(struct WordList *wordList);
+    // Since space complexity is not a huge concern for this, is probably
+    // alright to not sort in place and just make and return a new struct
+    
+    // iterate through the structure of words
+
 
 // Prints the top 25 words
 void printTop25(struct WordList *wordList);
+// print up to the 25th entry in the sorted list returned by sortByfrequency
 
 
 // ========================
@@ -86,46 +95,3 @@ int main() {
     return 0;
 }
 
-
-// ========================
-// Function Definitions
-// ========================
-
-// void toLower(char *word)
-//     - Loop through each character
-//     - If between 'A' and 'Z', add 32 to make it lowercase
-
-// int isAlnum(char c)
-//     - Return 1 if ('a' <= c <= 'z') or ('A' <= c <= 'Z') or ('0' <= c <= '9')
-//     - Else return 0
-
-// void loadStopWords(char *filename, struct StopWords *stopWords)
-//     - Open stop_words.txt
-//     - Read one character at a time
-//     - When a comma or newline appears, end the current word and store it
-//     - Increase stopWords->total
-
-// int isStopWord(char *word, struct StopWords *stopWords)
-//     - Loop through all stored stop words
-//     - Compare each character manually
-//     - If identical, return 1 (true)
-//     - Else return 0
-
-// void countWordFrequencies(char *filename, struct StopWords *stopWords, struct WordList *wordList)
-//     - Open the text file
-//     - Read character by character
-//     - Build words using only alphanumeric characters
-//     - Convert to lowercase
-//     - When a non-alphanumeric is reached:
-//         - Check if word length >= 2
-//         - Check if not a stop word
-//         - If word already exists, increment count
-//         - Otherwise add new word to wordList
-
-// void sortByFrequency(struct WordList *wordList)
-//     - Use nested loops (manual bubble sort or selection sort)
-//     - Compare counts
-//     - Swap words and counts accordingly
-
-// void printTop25(struct WordList *wordList)
-//     - Print first 25 entries of wordList (word and count)
