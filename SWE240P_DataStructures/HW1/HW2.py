@@ -5,7 +5,7 @@
 # peek() show top element
 # size() return the size of the stack
 
-class stack:
+class Stack:
     def __init__(self):
         self.items = []
 
@@ -96,10 +96,33 @@ def calculate(expression: str):
     print("Result:", result)
     return result
 
-
 # --- Test ---
 test = '9 + 5 * 4'
 calculate(test)
+#there should be some more math tests
+
+
+
+
+""" Task 3: Implement a Queue data structure from scratch, you can use array or list, or your linked list"""
+
+class Queue:
+    def __init__(self):
+        self.items = []
+
+    def enqueue(self,element):
+        self.items.append(element)
+
+    def dequeue(self):
+        return self.items.pop(0)
+    def poll(self):
+        return self.items[0]
+    def size(self):
+        return len(self.items)
+        
+
+
+        
 
 
 
