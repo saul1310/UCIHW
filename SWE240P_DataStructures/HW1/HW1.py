@@ -163,12 +163,15 @@ class LinkedList:
             current = current.next
         if count == 0:
             return None
-        median_index = count // 2
+        # For even count, we want the two middle elements at indexes
+        # (count//2 - 1) and (count//2). For odd count, we want the element
+        # at index count//2. Using zero-based indexing, compute the index of
+        # the lower-middle element and advance to it.
+        lower_middle = (count - 1) // 2
         current = self.head
-        for i in range(median_index):
+        for i in range(lower_middle):
             current = current.next
         if count % 2 == 0:
-            # average of two middle ids
             return (current.id + current.next.id) / 2
         else:
             return current.id
