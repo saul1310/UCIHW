@@ -223,7 +223,7 @@ if __name__ == '__main__':
     before = sq.queueOne.items.copy()
     popped = sq.pop()
     after = sq.queueOne.items.copy()
-    expected = [20,10]
+    expected = [20,10] 
     _print_test('StackWithTwoQs pop', before, after, expected)
 
 
