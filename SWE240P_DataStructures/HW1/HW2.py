@@ -28,37 +28,79 @@ class stack:
         return len(self.items)
     
 
-s = stack()
-s.push(10)
-s.push(20)
-print(s.peek())   # 20
-print(s.pop())    # 20
-print(s.size())   # 1
-
-# --------------------------------------------------
-
-# Task 2
-# use the python built in *, +,-,//, 
-# just write a calculator shell using these
-# and storing the data in the stack
-
-
-#input is a string
-def tokenize(input: str):
-    tokens = []
-    for input[i] in range(len(input)):
-        if i == ' ':
-            pass
-        tokens.append(i)
 
 
 
-#turn into a list of tokens from string
+def calculate(expression: str):
+    """Converts infix (no parentheses) to postfix and evaluates it."""
 
-#feed tokens into the two stacks 
+    def infix_to_postfix(expr: str) -> str:
+        precedence = {'+': 1, '-': 1, '*': 2, '/': 2}
+        stck = stack()
+        output = []
 
-#evaluate stack expressions
+        # Remove whitespace
+        expr = expr.replace(" ", "")
 
-    for i in range(len(input)):
-        if i in operands:
-            operands = ['+','-'','*'','/']
+        # Tokenize expression into numbers and operators
+        tokens = []
+        num = ""
+        for ch in expr:
+            if ch.isdigit():
+                num += ch
+            else:
+                if num:
+                    tokens.append(num)
+                    num = ""
+                tokens.append(ch)
+        if num:
+            tokens.append(num)
+
+        # Infix → Postfix conversion
+        for token in tokens:
+            if token.isdigit():
+                output.append(token)
+            elif token in precedence:
+                while (stck.size() > 0 and
+                       precedence.get(stck.peek(), 0) >= precedence[token]):
+                    output.append(stck.pop())
+                stck.push(token)
+
+        while stck.size() > 0:
+            output.append(stck.pop())
+
+        return ' '.join(output)
+
+    # Convert and print postfix
+    postfix = infix_to_postfix(expression)
+    print("Postfix:", postfix)
+
+    # Evaluate the postfix expression
+    eval_stack = stack()
+    for token in postfix.split():
+        if token.isdigit():
+            eval_stack.push(float(token))
+        else:
+            b = eval_stack.pop()
+            a = eval_stack.pop()
+            if token == '+':
+                eval_stack.push(a + b)
+            elif token == '-':
+                eval_stack.push(a - b)
+            elif token == '*':
+                eval_stack.push(a * b)
+            elif token == '/':
+                eval_stack.push(a / b)
+
+    result = eval_stack.pop()
+    print("Result:", result)
+    return result
+
+
+# --- Test ---
+test = '9 + 5 * 4'
+calculate(test)
+
+
+
+
