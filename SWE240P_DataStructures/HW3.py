@@ -3,6 +3,7 @@
 
 
 # HashTable: A fixed-size array or list. Depending on your hash function,
+#should this have the size as a parameter you can define?
 class Hashmap:
     def __init__(self):
         self.mod = 20
@@ -43,8 +44,26 @@ class Hashmap:
 
 """Task 2"""
 # parse through pride and prejudice line by line 
-# calculate the anagram root word for each word
-# make a seen map using hashmap implementation
+def processFile():
+    print("Enter Filename")
+    print("Please Use a .txt file in the same directory")
+    filename = input()
+    
+    #edge cases, error messages here
+    # make a seen map using hashmap implementation
+    with open(filename,'r') as f:
+        for line in f:
+            print(line)
+    
+
+# calculate the anagramrootword for each word
+
+# insert word into map. if its present, skip it
+
+#call the size function of the hash
+
+
+
 # return number of unique words by calling size function
         
 
@@ -53,9 +72,7 @@ class Hashmap:
 
 
 
-map = Hashmap()
-map.insert('yea')
-print(map.size())
+processFile()
 
 
 
