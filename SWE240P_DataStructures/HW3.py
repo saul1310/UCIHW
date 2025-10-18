@@ -30,6 +30,15 @@ class Hashmap:
     def insert(self,x:str):
         val = self.hash(x)
         self.buckets[val].append(x)
+
+    def size(self):
+        total = 0
+        for b in self.buckets:
+           if b:
+               total += len(b)
+        return total
+   
+                  
         
 
 
@@ -38,7 +47,9 @@ class Hashmap:
 
 
 map = Hashmap()
-map.hash('hi')
+map.insert('yea')
+print(map.size())
+
 
 
 
