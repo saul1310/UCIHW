@@ -25,7 +25,17 @@ class Hashmap:
             hashval = (chartoval(c) + base * hashval)
             hashval = hashval % self.mod
 
-        print( hashval)
+        return(hashval)
+
+    def insert(self,x:str):
+        val = self.hash(x)
+        self.buckets[val].append(x)
+        
+
+
+
+
+
 
 map = Hashmap()
 map.hash('hi')
