@@ -38,7 +38,14 @@ class Hashmap:
                total += len(b)
         return total
    
-                  
+# Test Cases for task 1
+
+
+"""Task 2"""
+# parse through pride and prejudice line by line 
+# calculate the anagram root word for each word
+# make a seen map using hashmap implementation
+# return number of unique words by calling size function
         
 
 
