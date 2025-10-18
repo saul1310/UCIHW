@@ -6,10 +6,23 @@
 #should this have the size as a parameter you can define?
 class Hashmap:
     def __init__(self):
-        self.mod = 20
+        self.mod = 5
         self.buckets=[]
-        for i in range(20):
+        for i in range(5):
             self.buckets.append([])
+
+    def resize(self):
+       
+        old_buckets = self.buckets
+        new_capacity = len(self.buckets) *2
+        self.mod = new_capacity
+        new_buckets = [[] for _ in range(new_capacity)]
+        
+        self.capacity = new_capacity
+        self.buckets = new_buckets  
+        for bucket in old_buckets:
+            for key in bucket:
+                self.insert(key)
 
             
 
@@ -71,8 +84,18 @@ def processFile():
 
 
 
+map = Hashmap()
+print("before")
+map.insert('hey')
+map.insert('yeah')
+map.insert('im outcast guys')
+print(map.buckets)
 
-processFile()
+map.resize()
+print("after")
+print(map.buckets)
+
+
 
 
 
