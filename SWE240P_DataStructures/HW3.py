@@ -42,6 +42,11 @@ class Hashmap:
         return(hashval)
 
     def insert(self,x:str):
+        tolerance = self.size() / len(self.buckets)
+        if tolerance > .75:
+            print("Load factor exceeded 0.75, resizing...")
+            self.resize()
+
         val = self.hash(x)
         self.buckets[val].append(x)
 
@@ -84,18 +89,23 @@ def processFile():
 
 
 
+print("Creating Hashmap with initial capacity 5")
 map = Hashmap()
-print("before")
-map.insert('hey')
-map.insert('yeah')
-map.insert('im outcast guys')
-print(map.buckets)
+words_to_insert = [
+    "apple", "banana", "cherry", "date", "elderberry",
+    "fig", "grape", "honeydew", "kiwi", "lemon"
+]
 
-map.resize()
-print("after")
-print(map.buckets)
+print("\nInserting words one by one:")
+for word in words_to_insert:
+    map.insert(word)
+    print(f"Buckets after inserting", map.buckets)
 
-
+print(f"Final size of hashmap: {map.size()}")
+print(f"Final buckets count: {len(map.buckets)}")
+print("Final buckets content:")
+for i, bucket in enumerate(map.buckets):
+    print(f"Bucket {i}: {bucket}")
 
 
 
