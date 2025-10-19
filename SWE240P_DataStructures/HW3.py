@@ -1,5 +1,5 @@
 """ Task-1: Implement a Hash data structure from scratch."""
-
+import re
 
 
 # HashTable: A fixed-size array or list. Depending on your hash function,
@@ -74,20 +74,25 @@ def processFile():
     #edge cases, error messages here
 
     map = Hashmap()
-    with open(filename,'r') as f:
+    with open(filename, 'r') as f:
         for line in f:
-            words = line.strip()
-            words = words.split()
+            # Split line by non-alphanumeric characters
+            words = re.split(r'[^a-zA-Z0-9]+', line.strip())
+
             for word in words:
-                word =  word.lower()
+                if word == "":
+                    continue  # skip empty strings
+
+                word = word.lower()
                 word = sorted(word)
                 word = "".join(word)
+
                 if map.contains(word):
                     pass
                 else:
                     map.insert(word)
+
         print(map.buckets)
-               
 
     
 
