@@ -93,20 +93,13 @@ def processFile():
                     map.insert(word)
 
         print(map.buckets)
+    print(map.size())
 
     
 
-# calculate the anagramrootword for each word
 
-# insert word into map. if its present, skip it
-
-#call the size function of the hash
-
-
-
-# return number of unique words by calling size function
-        
 
 
 processFile()
+print
 
