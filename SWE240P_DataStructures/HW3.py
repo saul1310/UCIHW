@@ -6,9 +6,9 @@
 #should this have the size as a parameter you can define?
 class Hashmap:
     def __init__(self):
-        self.mod = 5
+        self.mod = 50
         self.buckets=[]
-        for i in range(5):
+        for i in range(50):
             self.buckets.append([])
 
     def resize(self):
@@ -25,9 +25,11 @@ class Hashmap:
                 self.insert(key)
 
             
+    def contains(self, word):
+        index = self.hash(word)
+        return word in self.buckets[index]
 
-    #generate a key based on input
-    #polynomial method
+    #keygen function going on polynomial approach
     def hash(self,x):
         base=33
         size=len(x)
@@ -65,13 +67,28 @@ class Hashmap:
 def processFile():
     print("Enter Filename")
     print("Please Use a .txt file in the same directory")
+
+
     filename = input()
     
     #edge cases, error messages here
-    # make a seen map using hashmap implementation
+
+    map = Hashmap()
     with open(filename,'r') as f:
         for line in f:
-            print(line)
+            words = line.strip()
+            words = words.split()
+            for word in words:
+                word =  word.lower()
+                word = sorted(word)
+                word = "".join(word)
+                if map.contains(word):
+                    pass
+                else:
+                    map.insert(word)
+        print(map.buckets)
+               
+
     
 
 # calculate the anagramrootword for each word
@@ -86,33 +103,5 @@ def processFile():
         
 
 
+processFile()
 
-
-
-print("Creating Hashmap with initial capacity 5")
-map = Hashmap()
-words_to_insert = [
-    "apple", "banana", "cherry", "date", "elderberry",
-    "fig", "grape", "honeydew", "kiwi", "lemon"
-]
-
-print("\nInserting words one by one:")
-for word in words_to_insert:
-    map.insert(word)
-    print(f"Buckets after inserting", map.buckets)
-
-print(f"Final size of hashmap: {map.size()}")
-print(f"Final buckets count: {len(map.buckets)}")
-print("Final buckets content:")
-for i, bucket in enumerate(map.buckets):
-    print(f"Bucket {i}: {bucket}")
-
-
-
-
-
-# Your hash function must have a collision-resolution mechanism.
-
-
-# insert(x):  Insert string x to the HashTable in the index returned by hash(x).
-# size():  Returns the size of the elements, i.e., the number of keys.
