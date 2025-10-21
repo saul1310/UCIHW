@@ -6,3 +6,24 @@
 # Program: 4 characters
 # Year: 1 character
 # Each record is stored as one line in the text file; i.e., there is a newline character immediately following the year.
+
+# Task 1: Build the BST
+
+#create class for student info
+class Student:
+    def __init__(self,Studentnumber,LastName,Department,Program,Year)
+        self.Studentnumber = ''
+        self.LastName = ''
+        self.Department = ''
+        self.Program = ''
+        self.year=''
+
+
+# Node class for BST
+class Node:
+    def __init__(self,data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+
