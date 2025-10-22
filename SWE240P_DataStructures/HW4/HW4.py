@@ -23,7 +23,7 @@ class Node:
 class BST:
     def __init__(self):
         self.root = None
-
+    #Iterates through the tree, once it find the missing spot where the new node should be it creates a node object with the student info 
     def insert(self, student):
         def _insert(root, student):
             if not root:
@@ -35,6 +35,7 @@ class BST:
             return root
         self.root = _insert(self.root, student)
 
+    #DFS Traversal, and prints each nodes data to a text file
     def inorder_to_file(self, filename):
         with open(filename, "w") as f:
             def _inorder(node):
@@ -43,6 +44,8 @@ class BST:
                     f.write(str(node.data) + "\n")
                     _inorder(node.right)
             _inorder(self.root)
+
+    #BFS Traversal, and prints each nodes data to a text file
 
 # ------------------ Build BST from File ------------------
 def build_bst_from_file(filename):
