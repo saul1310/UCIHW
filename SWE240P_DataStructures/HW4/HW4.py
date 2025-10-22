@@ -51,11 +51,14 @@ class BST:
             self.Root = _insert(self.Root,Student)
       
         
-def build_bst_from_file(filename):
+def build_bst_from_file(file):
+        #should take in the lines with info, assign them to nodes, and also sort for each insertion
         bst = BST
-        with open(filename,"r") as file:
+        with open(file, "r") as file:
+
             for line in file:
-                print(line)
+                current = Student(line[1:8:1],line[8:26:1],line[26:30:1],line[30:34:1],line[-1])
+                print(current.Department)
 
 
 var = input()
