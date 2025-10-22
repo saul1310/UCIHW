@@ -11,7 +11,7 @@
 
 #create class for student info
 class Student:
-    def __init__(self,Studentnumber,LastName,Department,Program,Year)
+    def __init__(self,Studentnumber,LastName,Department,Program,Year):
         self.Studentnumber = ''
         self.LastName = ''
         self.Department = ''
@@ -26,4 +26,37 @@ class Node:
         self.left = None
         self.right = None
 
+class BST:
+    def __init__(self):
+        self.root= None
 
+
+
+        
+
+    def insert(self,Student):
+        def _insert(Root,Student):
+       
+            if Root == None:
+                return Node(Student)
+            if Student.LastName.lower() < Root.Data.LastName.lower():
+                Root.left = _insert(Root.left,Student)
+            elif Student.LastName.lower > Root.Data.LastName.lower():
+                Root.right = _insert(Root.right,Student)
+            else:
+                if Student.Studentnumber < Root.Data.Studnetnumber:
+                    Root.left = _insert(Root.left,Student)
+                else:
+                    Root.right = _insert(Root.right,Student)
+            self.Root = _insert(self.Root,Student)
+      
+        
+def build_bst_from_file(filename):
+        bst = BST
+        with open(filename,"r") as file:
+            for line in file:
+                print(line)
+
+
+var = input()
+build_bst_from_file(var)
