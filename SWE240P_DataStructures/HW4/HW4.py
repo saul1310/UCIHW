@@ -1,3 +1,5 @@
+import collections
+
 # ------------------ Student Class ------------------
 class Student:
     def __init__(self, Studentnumber, LastName, Department, Program, Year):
@@ -44,6 +46,27 @@ class BST:
                     f.write(str(node.data) + "\n")
                     _inorder(node.right)
             _inorder(self.root)
+                
+    def inorder_to_fileBFS(self, filename):
+        if not self.root:
+            return
+
+        with open(filename, "w") as f:
+            q = collections.deque()
+            q.append(self.root)
+
+            while q:
+                node = q.popleft()
+                if node:
+                    # Write the string representation of the Student to the file
+                    f.write(str(node.data) + "\n")
+                    # Add children to the queue
+                    q.append(node.left)
+                    q.append(node.right)
+
+
+              
+
 
     #BFS Traversal, and prints each nodes data to a text file
 
@@ -77,4 +100,4 @@ def build_bst_from_file(filename):
 # ------------------ Run ------------------
 filename = input("Enter filename: ")
 tree = build_bst_from_file(filename)
-tree.inorder_to_file("output.txt")
+tree.inorder_to_fileBFS("output.txt")
