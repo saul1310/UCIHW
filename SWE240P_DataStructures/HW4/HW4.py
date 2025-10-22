@@ -35,15 +35,14 @@ class BST:
             return root
         self.root = _insert(self.root, student)
 
-    def inorder(self):
-        self._inorder(self.root)
-
-    def _inorder(self, node):
-        if node:
-            self._inorder(node.left)
-            print(node.data.LastName)
-            self._inorder(node.right)
-
+    def inorder_to_file(self, filename):
+        with open(filename, "w") as f:
+            def _inorder(node):
+                if node:
+                    _inorder(node.left)
+                    f.write(str(node.data) + "\n")
+                    _inorder(node.right)
+            _inorder(self.root)
 
 # ------------------ Build BST from File ------------------
 def build_bst_from_file(filename):
@@ -75,4 +74,4 @@ def build_bst_from_file(filename):
 # ------------------ Run ------------------
 filename = input("Enter filename: ")
 tree = build_bst_from_file(filename)
-tree.inorder()
+tree.inorder_to_file("output.txt")
