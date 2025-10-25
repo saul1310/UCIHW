@@ -87,10 +87,11 @@ def quickSort(arr, low, high):
 # ------------------------------------------------------
 
 
-wordlist =  ["bucket","rat","mango","tango","ogtan","tar"]
+wordlist =  ["bucket","rat","mango","tango","ogtan","tar",'tuckeb']
 
-def groupanagram(words: list[str]) -> list[list[str]]:
-    sortMethod = int(input("enter 1 for quicksort and 2 for mergesort"))
+    # var in parametrs is used for selecting the sorting method, with 1 being merge sort and 2 being quicksort
+def groupanagram(words: list[str],var) -> list[list[str]]:
+    sortMethod =  var
 
         # keys[i] = the sorted “root” form (the anagram signature)
         # result[i] = the list of original words that match that signature
@@ -102,9 +103,15 @@ def groupanagram(words: list[str]) -> list[list[str]]:
         formatted = [ord(x) for x in word]
         match sortMethod:
             case 1:
-                quickSort(formatted, 0, len(formatted) - 1)
+               
+                formatted =mergesort(formatted)
+                
             case 2:
-                pass
+               
+                print("Quicksort selected")
+                quickSort(formatted, 0, len(formatted) - 1)
+             
+
 
         # Convert sorted numbers back to string key
         formatted = ''.join(chr(x) for x in formatted)
@@ -121,6 +128,4 @@ def groupanagram(words: list[str]) -> list[list[str]]:
     print(result)
     return result
 
-# groupanagram(wordlist)
-testarr = [9,8,7,6,5,4,3,2,1]
-print(mergesort(testarr))
+print(groupanagram(wordlist,2) ==  groupanagram(wordlist,1))
