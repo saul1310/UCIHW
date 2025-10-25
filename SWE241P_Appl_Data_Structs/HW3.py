@@ -9,8 +9,40 @@
 #Task 1
 # -----------------------------------------
 
-def mergesort(input):
-    pass
+def mergesort(arr):
+    #base case: a list of 0 or 1 items
+    if len(arr) <=1:
+        return arr
+    
+    #split the list into two halves
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+
+    #recursively sort each half
+    left_sorted = mergesort(left_half)
+    right_sorted = mergesort(right_half)
+
+    #merge the two sorted halves
+    return merge(left_sorted,right_sorted)
+   
+def merge(left,right):
+    result = []
+    i = j = 0
+
+    # compare elements and merge the two halves in sorted order
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i +=1
+        else:
+            result.append(right[j])
+            j +=1
+    #add any remaining elements
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+
 
 # ============================================
 # || Quicksort Methods                      ||      
@@ -89,4 +121,6 @@ def groupanagram(words: list[str]) -> list[list[str]]:
     print(result)
     return result
 
-groupanagram(wordlist)
+# groupanagram(wordlist)
+testarr = [9,8,7,6,5,4,3,2,1]
+print(mergesort(testarr))
