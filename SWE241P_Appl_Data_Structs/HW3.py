@@ -12,8 +12,9 @@
 def mergesort(input):
     pass
 
-def quicksort(input):
-    # partition function
+# ============================================
+# || Quicksort Methods                      ||      
+# ============================================
 def partition(arr, low, high):
     
     # choose the pivot
@@ -51,6 +52,24 @@ def quickSort(arr, low, high):
         quickSort(arr, low, pi - 1)
         quickSort(arr, pi + 1, high)
 
+# ------------------------------------------------------
+
+
 input =  ["bucket","rat","mango","tango","ogtan","tar"]
 def groupanagram(input:list) -> list[str]:
-    pass 
+
+    #turn word into sortable form(numbers) 
+    for word in input:
+        formatted = [ord(x) for x in word + ',']
+        formatted.pop(-1) # remove the trailing comma lol
+
+        # call your prefered sorting algo on the numbers
+        quickSort(formatted, 0, len(formatted) - 1)
+        #turn the sorted numbers back into a string, now the root word anagram
+        formatted = [chr(x) for x in formatted]
+        formatted="".join(formatted)
+        
+        print(formatted)
+
+
+groupanagram(input) 
