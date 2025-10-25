@@ -55,21 +55,38 @@ def quickSort(arr, low, high):
 # ------------------------------------------------------
 
 
-input =  ["bucket","rat","mango","tango","ogtan","tar"]
-def groupanagram(input:list) -> list[str]:
+wordlist =  ["bucket","rat","mango","tango","ogtan","tar"]
 
-    #turn word into sortable form(numbers) 
-    for word in input:
-        formatted = [ord(x) for x in word + ',']
-        formatted.pop(-1) # remove the trailing comma lol
+def groupanagram(words: list[str]) -> list[list[str]]:
+    sortMethod = int(input("enter 1 for quicksort and 2 for mergesort"))
 
-        # call your prefered sorting algo on the numbers
-        quickSort(formatted, 0, len(formatted) - 1)
-        #turn the sorted numbers back into a string, now the root word anagram
-        formatted = [chr(x) for x in formatted]
-        formatted="".join(formatted)
-        
-        print(formatted)
+        # keys[i] = the sorted “root” form (the anagram signature)
+        # result[i] = the list of original words that match that signature
+    result = []             
+    keys = []               
 
+    for word in words:
+        # Convert to list of ASCII numbers
+        formatted = [ord(x) for x in word]
+        match sortMethod:
+            case 1:
+                quickSort(formatted, 0, len(formatted) - 1)
+            case 2:
+                pass
 
-groupanagram(input) 
+        # Convert sorted numbers back to string key
+        formatted = ''.join(chr(x) for x in formatted)
+
+        # Check if this key already has a bucket
+        if formatted in keys:
+            idx = keys.index(formatted)
+            result[idx].append(word)
+        else:
+            # Create new bucket for this key
+            keys.append(formatted)
+            result.append([word])
+
+    print(result)
+    return result
+
+groupanagram(wordlist)
