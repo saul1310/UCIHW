@@ -1,131 +1,135 @@
-#Algorithms HW3 
-#--------------------------------------------------------------------------------
+import time
+import tracemalloc
+import random
+import string
+import matplotlib.pyplot as plt
 
-# Given an array of strings Strings, 
-# group the words that are anagrams to each other. You can return the answer in any order. 
-#implement the function  groupAnagram(List<String> strings) 
-# that takes a list of strings and returns a list of lists of strings
-
-#Task 1
-# -----------------------------------------
+# ------------------- Sorting Algorithms -------------------
 
 def mergesort(arr):
-    #base case: a list of 0 or 1 items
-    if len(arr) <=1:
+    if len(arr) <= 1:
         return arr
-    
-    #split the list into two halves
     mid = len(arr) // 2
-    left_half = arr[:mid]
-    right_half = arr[mid:]
+    left_sorted = mergesort(arr[:mid])
+    right_sorted = mergesort(arr[mid:])
+    return merge(left_sorted, right_sorted)
 
-    #recursively sort each half
-    left_sorted = mergesort(left_half)
-    right_sorted = mergesort(right_half)
-
-    #merge the two sorted halves
-    return merge(left_sorted,right_sorted)
-   
-def merge(left,right):
+def merge(left, right):
     result = []
     i = j = 0
-
-    # compare elements and merge the two halves in sorted order
     while i < len(left) and j < len(right):
         if left[i] < right[j]:
             result.append(left[i])
-            i +=1
+            i += 1
         else:
             result.append(right[j])
-            j +=1
-    #add any remaining elements
+            j += 1
     result.extend(left[i:])
     result.extend(right[j:])
     return result
 
+def swap(arr, i, j):
+    arr[i], arr[j] = arr[j], arr[i]
 
-# ============================================
-# || Quicksort Methods                      ||      
-# ============================================
 def partition(arr, low, high):
-    
-    # choose the pivot
     pivot = arr[high]
-    
-    # index of smaller element and indicates 
-    # the right position of pivot found so far
     i = low - 1
-    # traverse arr[low..high] and move all smaller
-    # elements to the left side. Elements from low to 
-    # i are smaller after every iteration
     for j in range(low, high):
         if arr[j] < pivot:
             i += 1
             swap(arr, i, j)
-    
-    # move pivot after smaller elements and
-    # return its position
     swap(arr, i + 1, high)
     return i + 1
 
-# swap function
-def swap(arr, i, j):
-    arr[i], arr[j] = arr[j], arr[i]
-
-# the QuickSort function implementation
 def quickSort(arr, low, high):
     if low < high:
-        
-        # pi is the partition return index of pivot
         pi = partition(arr, low, high)
-        
-        # recursion calls for smaller elements
-        # and greater or equals elements
         quickSort(arr, low, pi - 1)
         quickSort(arr, pi + 1, high)
 
-# ------------------------------------------------------
+# ------------------- Group Anagrams with Timing & Memory -------------------
 
+def groupanagram(words: list[str], sortMethod: int) -> tuple[list[list[str]], float, float]:
+    result = []
+    keys = []
 
-wordlist =  ["bucket","rat","mango","tango","ogtan","tar",'tuckeb']
-
-    # var in parametrs is used for selecting the sorting method, with 1 being merge sort and 2 being quicksort
-def groupanagram(words: list[str],var) -> list[list[str]]:
-    sortMethod =  var
-
-        # keys[i] = the sorted “root” form (the anagram signature)
-        # result[i] = the list of original words that match that signature
-    result = []             
-    keys = []               
+    tracemalloc.start()
+    start_time = time.perf_counter()
 
     for word in words:
-        # Convert to list of ASCII numbers
         formatted = [ord(x) for x in word]
-        match sortMethod:
-            case 1:
-               
-                formatted =mergesort(formatted)
-                
-            case 2:
-               
-                print("Quicksort selected")
-                quickSort(formatted, 0, len(formatted) - 1)
-             
+        if sortMethod == 1:
+            formatted = mergesort(formatted)
+        elif sortMethod == 2:
+            quickSort(formatted, 0, len(formatted) - 1)
 
-
-        # Convert sorted numbers back to string key
-        formatted = ''.join(chr(x) for x in formatted)
-
-        # Check if this key already has a bucket
-        if formatted in keys:
-            idx = keys.index(formatted)
+        formatted_key = ''.join(chr(x) for x in formatted)
+        if formatted_key in keys:
+            idx = keys.index(formatted_key)
             result[idx].append(word)
         else:
-            # Create new bucket for this key
-            keys.append(formatted)
+            keys.append(formatted_key)
             result.append([word])
 
-    print(result)
-    return result
+    end_time = time.perf_counter()
+    current, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
 
-print(groupanagram(wordlist,2) ==  groupanagram(wordlist,1))
+    elapsed_time = end_time - start_time
+    peak_memory_kb = peak / 1024
+
+    return result, elapsed_time, peak_memory_kb
+
+# ------------------- Test Data Generation -------------------
+
+def random_word(length):
+    return ''.join(random.choice(string.ascii_lowercase) for _ in range(length))
+
+def generate_word_list(num_words, word_length_range=(3,8)):
+    return [random_word(random.randint(*word_length_range)) for _ in range(num_words)]
+
+# ------------------- Benchmarking -------------------
+
+input_sizes = [100, 500, 1000, 2000, 4000]
+merge_times = []
+quick_times = []
+merge_memory = []
+quick_memory = []
+
+for size in input_sizes:
+    test_list = generate_word_list(size)
+    
+    _, t_merge, m_merge = groupanagram(test_list, 1)
+    _, t_quick, m_quick = groupanagram(test_list, 2)
+    
+    merge_times.append(t_merge)
+    quick_times.append(t_quick)
+    merge_memory.append(m_merge)
+    quick_memory.append(m_quick)
+
+# ------------------- Plotting -------------------
+
+plt.figure(figsize=(12,5))
+
+# Time plot
+plt.subplot(1,2,1)
+plt.plot(input_sizes, merge_times, marker='o', label='MergeSort')
+plt.plot(input_sizes, quick_times, marker='x', label='QuickSort')
+plt.xlabel("Number of words")
+plt.ylabel("Time (seconds)")
+plt.title("Time vs Input Size")
+plt.legend()
+plt.grid(True)
+
+# Memory plot
+plt.subplot(1,2,2)
+plt.plot(input_sizes, merge_memory, marker='o', label='MergeSort')
+plt.plot(input_sizes, quick_memory, marker='x', label='QuickSort')
+plt.xlabel("Number of words")
+plt.ylabel("Peak Memory (KB)")
+plt.title("Memory Usage vs Input Size")
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
