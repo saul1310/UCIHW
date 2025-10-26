@@ -1,4 +1,12 @@
 from collections import deque
+import sys
+import os
+
+# Add the parent directory to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from HW4.HW4 import IntBST
+
 
 # ---------------- Node Class ----------------
 class Node:
@@ -100,8 +108,20 @@ class HeapBuilder:
     
       # ---------------- Task-2 Methods ----------------
     class BSTToHeapTransformer:
-        def bstToMinHeap(self,bst):
-            pass
+        def bstToMinHeap(self,bst,heap):
+            #helper dfs function
+            def dfs(root):
+                if not root:
+                    return
+                heap.insert(root.val)
+                
+                 
+                dfs(root.right)
+                dfs(root.left)
+      
+
+
+            
         def bstToMaxHeap(self,bst):
             pass
     
@@ -169,5 +189,11 @@ def test_heaps():
 
 
 # ---------------- Run Tests ----------------
-if __name__ == "__main__":
-    test_heaps()
+# if __name__ == "__main__":
+#     test_heaps()
+bst = IntBST()
+for val in [5, 3, 8, 1]:
+    bst.insert(val)
+
+root = bst.root
+bst.print_level_order()

@@ -1,4 +1,5 @@
 import collections
+from collections import deque
 
 # ------------------ Student Class ------------------
 class Student:
@@ -46,6 +47,28 @@ class BST:
                     f.write(str(node.data) + "\n")
                     _inorder(node.right)
             _inorder(self.root)
+
+    """ Prints the BST level by level."""
+    def print_bst_level_order(root):
+  
+        if not root:
+            print("Empty BST")
+            return
+        q = deque([root])
+        while q:
+            level_size = len(q)
+            level_vals = []
+            for _ in range(level_size):
+                node = q.popleft()
+                level_vals.append(node.val if hasattr(node, "val") else node.data)  
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+            print(level_vals)
+
+    def get_bst_root(bst):
+        return bst.root
                 
     def inorder_to_fileBFS(self, filename):
         if not self.root:
@@ -97,7 +120,10 @@ def build_bst_from_file(filename):
     return bst
 
 
+
+
 # ------------------ Run ------------------
-filename = input("Enter filename: ")
-tree = build_bst_from_file(filename)
-tree.inorder_to_fileBFS("output.txt")
+if __name__ == "__main__":
+    filename = input("Enter filename: ")
+    tree = build_bst_from_file(filename)
+    tree.inorder_to_fileBFS("output.txt")
