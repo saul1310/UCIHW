@@ -119,7 +119,36 @@ def build_bst_from_file(filename):
             # print(f"Read: {current}")
     return bst
 
+class IntBST:
+    def __init__(self):
+        self.root = None
 
+    class Node:
+        def __init__(self, val):
+            self.val = val
+            self.left = None
+            self.right = None
+
+    def insert(self, val):
+        def _insert(root, val):
+            if not root:
+                return self.Node(val)
+            if val < root.val:
+                root.left = _insert(root.left, val)
+            elif val > root.val:
+                root.right = _insert(root.right, val)
+            return root
+        self.root = _insert(self.root, val)
+
+    def inorder(self):
+        result = []
+        def _inorder(node):
+            if node:
+                _inorder(node.left)
+                result.append(node.val)
+                _inorder(node.right)
+        _inorder(self.root)
+        return result
 
 
 # ------------------ Run ------------------

@@ -113,11 +113,14 @@ class HeapBuilder:
             def dfs(root):
                 if not root:
                     return
+
                 heap.insert(root.val)
                 
                  
                 dfs(root.right)
                 dfs(root.left)
+            dfs(bst.root)
+        
       
 
 
@@ -191,9 +194,16 @@ def test_heaps():
 # ---------------- Run Tests ----------------
 # if __name__ == "__main__":
 #     test_heaps()
-bst = IntBST()
+bst = IntBST()  # or BST() if that’s the class name in HW4
 for val in [5, 3, 8, 1]:
     bst.insert(val)
 
-root = bst.root
-bst.print_level_order()
+builder = HeapBuilder()
+minHeap = builder.MinHeap()
+transformer = builder.BSTToHeapTransformer()
+
+transformer.bstToMinHeap(bst, minHeap)
+
+# Print results
+print("MinHeap array:", minHeap.getHeap())
+
