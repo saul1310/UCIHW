@@ -106,30 +106,27 @@ class HeapBuilder:
             heap.insert(val)
         return array_to_tree(heap.a)
     
-      # ---------------- Task-2 Methods ----------------
-    class BSTToHeapTransformer:
-        def bstToMinHeap(self,bst,heap):
-            #helper dfs function
-            def dfs(root):
-                if not root:
-                    return
-
-                heap.insert(root.val)
-                
-                 
-                dfs(root.right)
-                dfs(root.left)
-            dfs(bst.root)
+  # ---------------- Task-2 Methods ----------------
+class BSTToHeapTransformer:
+    def bstToMinHeap(self, bst, heap):
+        # helper dfs function
+        def dfs(root):
+            if not root:
+                return
+            heap.insert(root.val)
+            dfs(root.left)
+            dfs(root.right)
+        dfs(bst.root)
         
-      
-
-
-            
-        def bstToMaxHeap(self,bst):
-            pass
-    
-
-    
+    def bstToMaxHeap(self, bst, heap):
+        # helper dfs function
+        def dfs(root):
+            if not root:
+                return
+            heap.insert(root.val)
+            dfs(root.left)
+            dfs(root.right)
+        dfs(bst.root)
 
 
 # ---------------- Testing Utilities ----------------
@@ -194,16 +191,20 @@ def test_heaps():
 # ---------------- Run Tests ----------------
 # if __name__ == "__main__":
 #     test_heaps()
-bst = IntBST()  # or BST() if that’s the class name in HW4
+bst = IntBST()
 for val in [5, 3, 8, 1]:
     bst.insert(val)
 
 builder = HeapBuilder()
 minHeap = builder.MinHeap()
-transformer = builder.BSTToHeapTransformer()
+maxHeap = builder.MaxHeap()
 
+transformer = BSTToHeapTransformer()
+
+# Perform transformations
 transformer.bstToMinHeap(bst, minHeap)
+transformer.bstToMaxHeap(bst, maxHeap)
 
 # Print results
 print("MinHeap array:", minHeap.getHeap())
-
+print("MaxHeap array:", maxHeap.getHeap())
