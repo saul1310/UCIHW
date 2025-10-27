@@ -16,10 +16,10 @@
 # where each account is a node in the list.
 # Users must be sorted by their ID in the linked list. 
 
-#  initialization of node class
+
 import heapq
 
-
+#  initialization of node class
 class Node:
     """A node representing a bank account.
 
@@ -54,7 +54,8 @@ class Node:
 class LinkedList:
     def __init__(self):
         self.head = None
-
+    #time complexity: O(n)
+    # space complexity of traversal and adding a new node respectivelty: O(1)
     def addUser(self, name, address, ss, balance):
         """Add a new user and keep the linked list ordered by id.
 
@@ -78,15 +79,19 @@ class LinkedList:
             new_node.next = self.head
             self.head = new_node
             return new_node.id
-
+        
+        #Traversal function to add a new user
         current = self.head
+        #find the earliest location where the node should fit
         while current.next is not None and current.next.id < new_node.id:
             current = current.next
 
         new_node.next = current.next
         current.next = new_node
         return new_node.id
-
+    
+    #Time complextiy for traversal: O(n)
+    #Only relevant space complextiy is the heap operation and pointers, which are respectively O(1) each
     def deleteUser(self, id):
         current = self.head
         # Standard linked-list delete. On successful delete push the freed id
@@ -100,7 +105,8 @@ class LinkedList:
             heapq.heappush(Node._free_ids, current.id)
             current.next = None
             return
-
+        
+        #traversal searching for node to delete
         while current.next is not None and current.next.id != id:
             current = current.next
 
@@ -109,11 +115,15 @@ class LinkedList:
             return
 
         toBeDeleted = current.next
+        #deelte the node by circumventing it with the previous nodes pointer, letting garbage collection do its thing
         current.next = toBeDeleted.next
         # Reclaim the id for reuse
         heapq.heappush(Node._free_ids, toBeDeleted.id)
         toBeDeleted.next = None
 
+
+    #Time complexity of traversal: O(n)
+    #Time complexity to transfer: Constant time, O(1), just arithmetic
     def payUserToUser(self, payerID, payeeID, amount):
         """Transfer amount from payer to payee.
 
@@ -149,10 +159,13 @@ class LinkedList:
         payee.balance += amount
         print("Transfer Complete")
 
+    # Time complexity: O(n)
     def getMedianID(self):
         """Return the median id in the list.
+        This function traverses the list once to find the size, and then traverses again-
+        to half of the distance gone in the first loop to find the median node.
 
-        If the list length is even this returns the average of the two
+        If the list length is even this returns the average of the two-
         middle ids; if odd it returns the middle id. Returns None on empty
         list.
         """
@@ -175,7 +188,7 @@ class LinkedList:
             return (current.id + current.next.id) / 2
         else:
             return current.id
-
+    # Time complexity to traverse:O(N)
     def mergeAccounts(self, ID1, ID2):
         """Merge two accounts if their name/address/ss match.
 
@@ -197,9 +210,13 @@ class LinkedList:
         if not account1 or not account2:
             print("One or both accounts not found.")
             return
+        #Check to see if all the conditions outlined in the assignment for merging are true.
         if account1.name == account2.name and account1.address == account2.address and account1.ss == account2.ss:
+            #find account with lower id
             toKeep = account1 if account1.id < account2.id else account2
+            #find account with higher id
             toDelete = account2 if toKeep is account1 else account1
+            #take balance from higher id and give to lower
             toKeep.balance += toDelete.balance
             self.deleteUser(toDelete.id)
             print(f"Accounts {ID1} and {ID2} merged successfully into ID {toKeep.id}.")
@@ -207,6 +224,14 @@ class LinkedList:
             print("unable to merge accounts")
 
     @staticmethod
+    #static method for this one because it doesnt rely on a specific instance of a linked list like the others,
+    #and does not use self, taking only two banks as arguments
+    
+
+    #Traversal: O(n+m) where n and m are the sizes of bank 1 and 2
+    #Flow: add all nodes from bank 1 to new list, than all nodes from bank 2 to list, each insertion is specific so it 
+    #stays in order
+    #This function has a time complexity of O((n+m) ** 2)
     def mergeBanks(bankOfOrangeCounty, bankOfLosAngeles):
         """Merge two banks into a new LinkedList.
 
@@ -219,6 +244,7 @@ class LinkedList:
         """
         mergedBank = LinkedList()
         used_ids = set()
+
 
         def add_node_to_merged(node):
             # Choose a new id if node.id already used in mergedBank
@@ -234,11 +260,12 @@ class LinkedList:
             used_ids.add(new_id)
 
             # Insert a copy via addUser (preserves list invariants)
+          
             mergedBank.addUser(node.name, node.address, node.ss, node.balance)
 
             # Force the intended id on the newly added tail node. This is a
             # small, explicit step after insertion to ensure mergedBank contains
-            # the id we selected above.
+            # the id we selected above. This here is what gives the overall function O(n+m) **2
             current = mergedBank.head
             while current.next:
                 current = current.next
