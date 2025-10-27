@@ -17,6 +17,11 @@
 # Users must be sorted by their ID in the linked list. 
 
 
+""" Instructions to run:
+    Just run the file, testcases are defined at the bottom 
+    and there are not files to run this on.
+
+"""
 import heapq
 
 #  initialization of node class
