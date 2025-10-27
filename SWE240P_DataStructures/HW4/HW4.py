@@ -1,6 +1,14 @@
 import collections
 from collections import deque
 
+
+#instructions to run:
+#in vscode terminal, navigate to: UCIHW --> 240p --> hw4
+# then run:
+# $ HW4.py
+# then input:
+# tree-input.txt
+
 # ------------------ Student Class ------------------
 class Student:
     def __init__(self, Studentnumber, LastName, Department, Program, Year):
