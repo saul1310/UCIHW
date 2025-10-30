@@ -31,7 +31,8 @@ class City:
 
     #adds a new city to the adjacency list 
     def add_Connection(self,City):
-        self.connected_cities.append(City)
+        if City not in self.connected_cities:  # ← Check for duplicates
+            self.connected_cities.append(City)
 
 
 # Task-2: Read the text file and construct a graph of cities.
@@ -72,7 +73,11 @@ def read_road_network(filename):
     except Exception as e:
         print(f"Error reading file: {e}")
         return []
-
+"""
+Creates a Adjacency list impleneted as a map.
+Key = City name
+Value = City class implementation
+"""
 def create_Graph():
     pairs = read_road_network('road_network.txt')
     #iterate through pairs, and create a frequency map implementation
@@ -92,47 +97,34 @@ def create_Graph():
 
 
 
+""" Task 3 """
+# Task-3:  Given the list of City objects, write a function to return the number of islands in the 
+# archipelago. Note that this function would require finding the number of connected components in 
+# the graph.
+def findIslands(graph):
+    def dfs(city):
+        visited.add(city.name)  # ← Add STRING
+        for adjacent in city.connected_cities:
+            if adjacent.name not in visited:  # ← Check STRING
+                dfs(adjacent)
+
+    visited = set()
+    numIslands = 0
+    
+    for city in graph:  # city is a STRING (city name)
+        if city not in visited:  # ← Check STRING
+            numIslands += 1
+            dfs(graph[city])  # Pass City object
+    
+    return numIslands
+
 
 
 
 def main():
-    """Main function to create and display the city graph"""
+    graph = create_Graph()
+    print(findIslands(graph))
     
-    # Create the graph
-    print("Creating city graph...")
-    city_graph = create_Graph()
-    
-    # Print summary
-    print("="*50)
-    print("CITY GRAPH SUMMARY")
-    print("="*50)
-    print(f"Total Cities: {len(city_graph)}")
-    
-    # Find city with most connections
-    if city_graph:
-        max_connections = max(len(city.connected_cities) for city in city_graph.values())
-        most_connected = [name for name, city in city_graph.items() 
-                          if len(city.connected_cities) == max_connections]
-        print(f"Most connected city: {most_connected[0]} ({max_connections} connections)")
-    
-    print("="*50)
-    print()
-    
-    # Print first 10 cities with details
-    print("Sample of cities (showing first 10):")
-    for i, (city_name, city_obj) in enumerate(city_graph.items()):
-        if i >= 10:  # Only show first 10
-            break
-        
-        print(f"\n{city_obj.name}:")
-        print(f"  Population: {city_obj.population}")
-        print(f"  Connected to {len(city_obj.connected_cities)} cities:")
-        for connected in city_obj.connected_cities[:5]:  # Show first 5 connections
-            print(f"    - {connected.name}")
-        if len(city_obj.connected_cities) > 5:
-            print(f"    ... and {len(city_obj.connected_cities) - 5} more")
-    
-    print(f"\n... and {len(city_graph) - 10} more cities")
 
 
 # Call main when script is run
