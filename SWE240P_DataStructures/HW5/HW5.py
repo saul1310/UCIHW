@@ -2,6 +2,9 @@ from collections import deque
 import sys
 import os
 
+#instructions to run:
+# just run file
+
 # Add the parent directory to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
