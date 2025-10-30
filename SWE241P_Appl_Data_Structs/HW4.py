@@ -73,6 +73,32 @@ def read_road_network(filename):
     except Exception as e:
         print(f"Error reading file: {e}")
         return []
+    
+
+
+def read_city_population(filename, graph):
+    """Read and update city populations"""
+    try:
+        with open(filename, 'r') as file:
+            for line in file:
+                line = line.strip()
+                if line:
+                    parts = line.split(': ')
+                    if len(parts) == 2:
+                        city_name = parts[0].strip()
+                        population = int(parts[1].strip())
+                        
+                        # Update existing city or create new one
+                        if city_name in graph:
+                            graph[city_name].population = population
+                        else:
+                            # City in population file but not in road network
+                            graph[city_name] = City(city_name, population)
+    
+    except FileNotFoundError:
+        print(f"Error: '{filename}' not found.")
+    except Exception as e:
+        print(f"Error: {e}")
 """
 Creates a Adjacency list impleneted as a map.
 Key = City name
@@ -93,6 +119,8 @@ def create_Graph():
         #add the listed connection to each citys connected_cities attribute
         graph[city1].add_Connection(graph[city2])
         graph[city2].add_Connection(graph[city1])
+
+    read_city_population('city_population.txt', graph)
     return graph
 
 
@@ -103,27 +131,49 @@ def create_Graph():
 # the graph.
 def findIslands(graph):
     def dfs(city):
-        visited.add(city.name)  # ← Add STRING
+        visited.add(city.name)  
         for adjacent in city.connected_cities:
-            if adjacent.name not in visited:  # ← Check STRING
+            if adjacent.name not in visited: 
                 dfs(adjacent)
 
     visited = set()
     numIslands = 0
     
-    for city in graph:  # city is a STRING (city name)
-        if city not in visited:  # ← Check STRING
+    for city in graph: 
+        if city not in visited: 
             numIslands += 1
-            dfs(graph[city])  # Pass City object
+            dfs(graph[city]) 
     
     return numIslands
+"""
 
-
+Task-4:  Given the list of City objects, write a function that would return the
+population of each island in the island archipelago.
+Note that this function would require you to find the population of each connected component
+in the graph. """
+def findPopulation(graph):
+    def dfs(city):
+        visited.add(city.name)  # Adding STRING
+        population = city.population
+        for adjacent in city.connected_cities:
+            if adjacent.name not in visited:  # ← Check STRING not object
+                population += dfs(adjacent)
+        return population
+    
+    visited = set()
+    populations = []
+    
+    for city in graph:
+        if city not in visited:
+            islandpop = dfs(graph[city])
+            populations.append(islandpop)
+    
+    return populations
 
 
 def main():
     graph = create_Graph()
-    print(findIslands(graph))
+    print(findPopulation(graph))
     
 
 
