@@ -1,6 +1,7 @@
 # Task Description: Complete the following tasks.
 
-# Task-1:  Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise.
+# Task-1:  Given two strings s1 and s2, return true if s2 contains a permutation of s1, or 
+# false otherwise.
 #  In other words, return true if one of s1's permutations is the substring of s2.
 
 # Example 1:
@@ -10,6 +11,38 @@
 # Output: true
 
 # Explanation: s2 contains one permutation of s1 ("ba").
+
+from collections import Counter
+
+# Time complexity:
+# O(len1+len2), or O(n)
+#space Complexity:
+# O(1), only constant operatoins used
+
+def checkInclusion(s1: str, s2: str) -> bool:
+    len1, len2 = len(s1), len(s2)
+    if len1 > len2:
+        return False
+    #Counter returns a dict freq map
+    count1 = Counter(s1)
+    window = Counter(s2[:len1])
+
+    if count1 == window:
+        return True
+    #iterate through the length of s2
+    for i in range(len1, len2):
+        #i is at one character to the right of the string so we increase/ add it to the map by 1 count
+        window[s2[i]] += 1
+        #since weve moved right we need to decrement the character we left behind from our map
+        window[s2[i - len1]] -= 1
+        #if that recently decremented char now has a count of 0 remove it from the map
+        if window[s2[i - len1]] == 0:
+            del window[s2[i - len1]]
+        #if our mao contains the same frequency as s1f, we have a match
+        if count1 == window:
+            return True
+
+    return False
 
 
 
