@@ -63,3 +63,78 @@ def checkInclusion(s1: str, s2: str) -> bool:
 # Output: 7
 
 # Write sample test cases to validate your implementation.
+
+def is_valid(board, row, col):
+    for c in range(col):
+        #if board[c] == row theres already a queen in the same row
+        #if abs(board[c] - row) == abs(c - col) --> theres a queen on the same diagonal
+        if board[c] == row or abs(board[c] - row) == abs(c - col):
+            return False
+    return True
+
+def generate_solutions(col=0, board=None, solutions=None):
+    #defualt paramters, when the function is initially called, this sets up our parameters:
+    #board is set to [0,0,0,0,0,0,0,0], empty
+    #solutions is initialized as an empty list for now
+    if board is None:
+        board = [0] * 8
+    if solutions is None:
+        solutions = []
+    #our base case, if weve placed queens in all 8 columns, we have a complete board!
+    if col == 8:
+        #we then append our completed board to solutions, and return it
+        #we append a shallow copy since were gonna keep using board
+        solutions.append(board[:])
+        return solutions
+    #here we try each row for our current column, and check if its valid, if so we add it.
+    for row in range(1, 9):  # rows 1 to 8
+        if is_valid(board, row, col):
+            board[col] = row
+            #recursive fuinction: col = column we are currently trying to place a queen in
+            #board  = current partial solution, list where we store the row pos of each queen
+            #soluitons = a list of all valid solutions found so far
+            generate_solutions(col + 1, board, solutions)
+    return solutions
+
+def min_moves(input_positions):
+    solutions = generate_solutions()
+    min_moves = float('inf')
+    for sol in solutions:
+        #count how many columns differ from the current solution
+        moves = sum(1 for i in range(8) if sol[i] != input_positions[i])
+        min_moves = min(min_moves, moves)
+    return min_moves
+
+# ------------------ TEST SUITE ------------------
+
+if __name__ == "__main__":
+    print("=== Task 1: String Permutation Inclusion ===")
+
+    task1_tests = [
+        ("ab", "eidbaooo", True),    # "ba" exists
+        ("ab", "eidboaoo", False),   # no permutation
+        ("adc", "dcda", True),       # "cda" exists
+        ("hello", "ooolleoooleh", False),
+        ("a", "ab", True)
+    ]
+
+    for i, (s1, s2, expected) in enumerate(task1_tests, 1):
+        result = checkInclusion(s1, s2)
+        print(f"Test {i}: s1='{s1}', s2='{s2}' → {result} | Expected: {expected} | {'✅' if result == expected else '❌'}")
+print("\n=== Task 2: 8 Queens Minimum Moves ===")
+
+# Generate all valid solutions once
+valid_solutions = generate_solutions()
+
+# Pick some known valid solutions from the generated set
+task2_tests = [
+    ([1, 2, 3, 4, 5, 6, 7, 8], 7),   # clearly invalid
+    ([1, 1, 1, 1, 1, 1, 1, 1], 7),   # clearly invalid
+    (valid_solutions[0], 0),          # guaranteed valid solution
+    (valid_solutions[5], 0),          # another valid solution
+    (valid_solutions[10], 0),         # another valid solution
+]
+
+for i, (pos, expected) in enumerate(task2_tests, 1):
+    result = min_moves(pos)
+    print(f"Test {i}: input={pos} → {result} | Expected: {expected} | {'✅' if result == expected else '❌'}")
