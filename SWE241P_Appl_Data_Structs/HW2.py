@@ -5,7 +5,7 @@
 #Time complexity: O(log n)
 #space complexity: O(1)
 def find_first_last(nums, target):
-    #both suib functions have a time complexity of O(log n), since they are both just binary searches
+    #both sub functions have a time complexity of O(log n), since they are both just binary searches
     
     def find_first(nums, target):
         left, right = 0, len(nums) - 1
@@ -59,6 +59,7 @@ print (find_first_last(test,5))
 def searchmatrix(matrix,target):
     if not matrix or not matrix[0]:
         return False
+    #matrix is square, so m * n is length
     m,n = len(matrix),len(matrix[0])
     #left right are assinged to the left and right side of the "list"
     left,right = 0,m*n-1

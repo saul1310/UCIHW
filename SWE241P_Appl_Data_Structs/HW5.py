@@ -64,6 +64,19 @@ def checkInclusion(s1: str, s2: str) -> bool:
 
 # Write sample test cases to validate your implementation.
 
+"""Backtracking algorithm to find closest valid board from input
+Flow-->
+Places queens one column at a time.
+
+At each column, tries possible rows.
+
+Immediately checks if the placement is valid using is_valid().
+
+If not valid → stop exploring that path and backtrack.
+
+Continues only with placements that keep the board valid."""
+#Pruning ensures we only explore promising queen placements massively reducing runtime.
+
 def is_valid(board, row, col):
     # Time Complexity: O(col) → we check all previous columns
     # Space Complexity: O(1) → only a few variables used
@@ -74,6 +87,10 @@ def is_valid(board, row, col):
             return False
     return True
 
+
+# Recursively generates all valid 8-queen board arrangements.
+# Tries each row in the current column, placing a queen if it's safe, by calling isValid()
+# Stores complete solutions in `solutions` once all columns are filled.
 def generate_solutions(col=0, board=None, solutions=None):
     # Time Complexity: O(92 * 8) = O(1) because there are exactly 92 valid 8-queen solutions.
     # Space Complexity: O(92*8) = O(1) storing all 92 solutions of length 8.
@@ -101,13 +118,17 @@ def generate_solutions(col=0, board=None, solutions=None):
             generate_solutions(col + 1, board, solutions)
     return solutions
 
+#Main function that calls other 2
+# Hamming distance is the number of positions at which two sequences of equal length differ.
+# In this case, it counts how many queens are in different rows compared to a reference board.
+#input positions is your input for board to check.
 def min_moves(input_positions):
     # Time Complexity: O(92 * 8) = O(1) p since we compare input with all 92 valid solutions
     # Space Complexity: O(92*8) = O(1)  storing all 92 solutions.
     solutions = generate_solutions()
     min_moves = float('inf')
     for sol in solutions:
-        #count how many columns differ from the current solution
+        #count how many columns differ from the current solution, known as the hamming distance
         moves = sum(1 for i in range(8) if sol[i] != input_positions[i])
         min_moves = min(min_moves, moves)
     return min_moves

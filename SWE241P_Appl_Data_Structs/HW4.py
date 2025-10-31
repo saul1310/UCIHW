@@ -26,8 +26,10 @@
 
 #source of info: 
 # https://www.youtube.com/watch?v=oDqjPvD54Ss -  Youtube video on BFS on graph
+#Solution to Leetcode # of provinces problem
 
 from collections import deque
+from typing import List,Tuple
 
 """ City class"""
 # Space Complexity:
@@ -39,6 +41,7 @@ class City:
         self.connected_cities = []
 
     #adds a new city to the adjacency list 
+    #Run time complexity is O(1)
     def add_Connection(self,City):
         if City not in self.connected_cities:  # ← Check for duplicates
             self.connected_cities.append(City)
@@ -63,7 +66,7 @@ class City:
         
         """
 
-def read_road_network(filename):
+def read_road_network(filename) -> List[Tuple[str, str]]:
     city_pairs = []
     
     try:
@@ -90,6 +93,7 @@ def read_road_network(filename):
         return []
     except Exception as e:
         print(f"Error reading file: {e}")
+        #returns list containing tuples with a city and a city its connected to
         return []
     
 
@@ -155,6 +159,7 @@ def create_Graph():
             graph[city2] = City(city2)
 
         #add the listed connection to each citys connected_cities attribute
+        #this makes sure its bi-directional as well
         graph[city1].add_Connection(graph[city2])
         graph[city2].add_Connection(graph[city1])
 
@@ -261,6 +266,8 @@ def bfs_shortest_path(graph, start, end):
         current_city = queue.popleft()
         
         # Check all neighbors
+        # neighbors are added to the queue in the same order they were added
+        #  to connected_cities when the graph was built.
         for neighbor in current_city.connected_cities:
             if neighbor.name not in visited:
                 visited.add(neighbor.name)

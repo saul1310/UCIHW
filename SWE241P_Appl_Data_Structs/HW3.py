@@ -3,11 +3,16 @@ import tracemalloc
 import random
 import string
 import matplotlib.pyplot as plt
+#Sources:
+# - LeetCode Problem 49: Group Anagrams
+# - Standard merge sort and quick sort algorithm pseudocode
 
 # ------------------- Sorting Algorithms -------------------
   
        
     # Time complexity- Worst: O(n log n)
+#     Merge Sort splits the array in half recursively (logn levels) 
+# and merges all elements at each level (O(n) work), giving O(n log n) time.
     # Space Complexity: O(n)  (due to temporary arrays created during merge)
 def mergesort(arr):
     # If the array has more than one element, it needs to be split
@@ -102,24 +107,31 @@ def quickSort(arr, low, high):
 #         O(n * k) for storing formatted keys and result lists
 #         + sorting overhead (O(k) for MergeSort, O(log k) for QuickSort)
 def groupanagram(words: list[str], sortMethod: int) -> tuple[list[list[str]], float, float]:
-    result = []
-    keys = []
+    result = [] # List to store groups of anagrams (or words with the same sorted key)
+    keys = []# List to store the sorted "key" for each group
 
+    #helper function for benchmark data
     tracemalloc.start()
     start_time = time.perf_counter()
 
     for word in words:
+        #turns the word into a list of ints
         formatted = [ord(x) for x in word]
+        #sorts list of ints
         if sortMethod == 1:
             formatted = mergesort(formatted)
         elif sortMethod == 2:
             quickSort(formatted, 0, len(formatted) - 1)
-
+        #turns ints back into characters, forming root word anagram
         formatted_key = ''.join(chr(x) for x in formatted)
+        #if its already in our list-->
         if formatted_key in keys:
+            #add our word to the correct bucket
             idx = keys.index(formatted_key)
             result[idx].append(word)
+        #if its not in our list already
         else:
+            #add a new one
             keys.append(formatted_key)
             result.append([word])
 
@@ -141,7 +153,27 @@ def generate_word_list(num_words, word_length_range=(3,8)):
     return [random_word(random.randint(*word_length_range)) for _ in range(num_words)]
 
 # ------------------- Benchmarking -------------------
+print("\n=== FUNCTIONAL CORRECTNESS TEST ===\n")
+example_input = ["bucket", "rat", "mango", "tango", "ogtan", "tar"]
+expected_output = [["bucket"], ["rat", "tar"], ["mango"], ["tango", "ogtan"]]
 
+# Test using MergeSort
+result_merge, t1, m1 = groupanagram(example_input, 1)
+print("MergeSort result:", result_merge)
+print("Matches expected?", sorted([sorted(g) for g in result_merge]) == sorted([sorted(g) for g in expected_output]))
+print(f"Time: {t1:.6f}s | Memory: {m1:.2f} KB\n")
+
+# Test using QuickSort
+result_quick, t2, m2 = groupanagram(example_input, 2)
+print("QuickSort result:", result_quick)
+print("Matches expected?", sorted([sorted(g) for g in result_quick]) == sorted([sorted(g) for g in expected_output]))
+print(f"Time: {t2:.6f}s | Memory: {m2:.2f} KB\n")
+
+result, _, _ = groupanagram(example_input, 1)
+print("Example test (MergeSort):", result)
+
+result, _, _ = groupanagram(example_input, 2)
+print("Example test (QuickSort):", result)
 input_sizes = [100, 500, 1000, 2000, 4000]
 merge_times = []
 quick_times = []
