@@ -14,11 +14,11 @@
 
 from collections import Counter
 
+
 # Time complexity:
 # O(len1+len2), or O(n)
 #space Complexity:
 # O(1), only constant operatoins used
-
 def checkInclusion(s1: str, s2: str) -> bool:
     len1, len2 = len(s1), len(s2)
     if len1 > len2:
@@ -65,6 +65,8 @@ def checkInclusion(s1: str, s2: str) -> bool:
 # Write sample test cases to validate your implementation.
 
 def is_valid(board, row, col):
+    # Time Complexity: O(col) → we check all previous columns
+    # Space Complexity: O(1) → only a few variables used
     for c in range(col):
         #if board[c] == row theres already a queen in the same row
         #if abs(board[c] - row) == abs(c - col) --> theres a queen on the same diagonal
@@ -73,6 +75,9 @@ def is_valid(board, row, col):
     return True
 
 def generate_solutions(col=0, board=None, solutions=None):
+    # Time Complexity: O(92 * 8) = O(1) because there are exactly 92 valid 8-queen solutions.
+    # Space Complexity: O(92*8) = O(1) storing all 92 solutions of length 8.
+
     #defualt paramters, when the function is initially called, this sets up our parameters:
     #board is set to [0,0,0,0,0,0,0,0], empty
     #solutions is initialized as an empty list for now
@@ -97,6 +102,8 @@ def generate_solutions(col=0, board=None, solutions=None):
     return solutions
 
 def min_moves(input_positions):
+    # Time Complexity: O(92 * 8) = O(1) p since we compare input with all 92 valid solutions
+    # Space Complexity: O(92*8) = O(1)  storing all 92 solutions.
     solutions = generate_solutions()
     min_moves = float('inf')
     for sol in solutions:
@@ -126,7 +133,6 @@ print("\n=== Task 2: 8 Queens Minimum Moves ===")
 # Generate all valid solutions once
 valid_solutions = generate_solutions()
 
-# Pick some known valid solutions from the generated set
 task2_tests = [
     ([1, 2, 3, 4, 5, 6, 7, 8], 7),   # clearly invalid
     ([1, 1, 1, 1, 1, 1, 1, 1], 7),   # clearly invalid
