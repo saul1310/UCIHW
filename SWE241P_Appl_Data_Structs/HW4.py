@@ -29,7 +29,9 @@
 
 from collections import deque
 
-
+""" City class"""
+# Space Complexity:
+#  O(1) per City object
 class City:
     def __init__(self,name,population = 0):
         self.name = name
@@ -47,11 +49,20 @@ class City:
 # Note that conceptually, this is similar to the adjacency list representation of the graph. 
 
 
-        """Creates a dict of city name/node object pairs
-           Iterates through networktxt file and adds each connection to apecified citys node.
+        """
+        Creates a dict of city name/node object pairs
+           Iterates through network.txt file and adds each connection to specified city
+        objects connected_cities.
            returns created dict
+            Time Complexity: 
+            - O(m), where m = number of lines in the file
+            (each line is parsed once, split, and appended)
+
+            Space Complexity:
+            - O(m), storing all city pairs in a list
         
         """
+
 def read_road_network(filename):
     city_pairs = []
     
@@ -82,6 +93,17 @@ def read_road_network(filename):
         return []
     
 
+"""
+Function: read_city_population(filename, graph)
+-----------------------------------------------
+Reads city populations and updates or adds cities to the graph.
+
+Time Complexity:
+- O(n), where n = number of cities in the population file
+
+Space Complexity:
+- O(1) additional (in-place update of graph)
+"""
 
 def read_city_population(filename, graph):
     """Read and update city populations"""
@@ -107,9 +129,18 @@ def read_city_population(filename, graph):
     except Exception as e:
         print(f"Error: {e}")
 """
-Creates a Adjacency list impleneted as a map.
+Creates a Adjacency list implemeted as a map.
 Key = City name
 Value = City class implementation
+Time Complexity:
+- O(m + n)
+    where m = number of roads (connections)
+          n = number of cities
+Each connection is processed once; each city may be added once.
+
+Space Complexity:
+- O(n + m)
+    for graph dictionary and city connections
 """
 def create_Graph():
     pairs = read_road_network('road_network.txt')
@@ -136,6 +167,14 @@ def create_Graph():
 # Task-3:  Given the list of City objects, write a function to return the number of islands in the 
 # archipelago. Note that this function would require finding the number of connected components in 
 # the graph.
+#This is essentially just leetcode # of provinces problem with a different input type.
+# Time Complexity:
+# - O(V + E)
+#     where V = number of cities (vertices)
+#           E = number of roads (edges)
+
+# Space Complexity:
+# - O(V) for visited set and recursion stack
 def findIslands(graph):
     def dfs(city):
         visited.add(city.name)  
@@ -157,10 +196,15 @@ def findIslands(graph):
 Task-4:  Given the list of City objects, write a function that would return the
 population of each island in the island archipelago.
 Note that this function would require you to find the population of each connected component
-in the graph. """
+in the graph. 
+Time Complexity: O(V + E)
+    - DFS visits every city and edge once
+Space Complexity: O(V)
+    - Visited set + recursion stack"""
 def findPopulation(graph):
+    #Helper function to itereate through an island given a city node, and add its population to total
     def dfs(city):
-        visited.add(city.name)  # Adding STRING
+        visited.add(city.name)  #
         population = city.population
         for adjacent in city.connected_cities:
             if adjacent.name not in visited:  # ← Check STRING not object
@@ -181,6 +225,10 @@ def findPopulation(graph):
 Task-5:
  Given two City objects, write a function that would return the minimum number of unique highways you can take to reach from one city
 to another. Note that this function requires you to find the distance, i.e., the number of unique highways between two cities.
+Time Complexity: O(V + E)
+    - BFS visits each city and edge at most once
+Space Complexity: O(V)
+    - Queue + visited set + previous dictionary
 """
 
 def bfs_shortest_path(graph, start, end):
@@ -233,42 +281,54 @@ def reconstruct_path(previous, start, end):
     Args:
         previous: Dictionary from bfs_shortest_path
         start: Starting city name
-        end: Ending city name
+        end: Ending city name 
         
     Returns:
         list: Path from start to end as list of city names
               Empty list if no path exists
-    """
+    Time Complexity: O(L), L = length of path
+    Space Complexity: O(L), for path list
+"""
     if not previous or end not in previous:
         return []  # No path exists
     
     # Build path backwards from end to start
     path = []
     current = end
-    
+    #follow the breadcrumb trail through the algo until at start node
     while current is not None:
         path.append(current)
         current = previous[current]
     
-    # Reverse to get start -> end
+    # we went in reverse starting at the end node, so reverse to get start -> end
     path.reverse()
     
     return path
 
+#THE SOLVE FUNCTION
 
-def shortestpath(city1, city2, graph):
-    """
-    Returns the minimum number of highways between two cities.
+
+"""
+Returns the minimum number of highways between two cities.
+
+Args:
+    city1: Starting city name (string)
+    city2: Ending city name (string)
+    graph: Dictionary of city names to City objects
     
-    Args:
-        city1: Starting city name (string)
-        city2: Ending city name (string)
-        graph: Dictionary of city names to City objects
-        
-    Returns:
-        int: Number of highways in shortest path, or -1 if no path exists
-    """
+Returns:
+    int: Number of highways in shortest path, or -1 if no path exists
+    
+Time Complexity: O(V + E)
+- Calls BFS (O(V + E)) and reconstruct_path (O(L) <= O(V))
+Space Complexity: O(V)
+- BFS structures + path list
+"""
+def shortestpath(city1, city2, graph):\
+    #Call the bfs function, starting at the input node, and ending at city2,
+    # constructing the previous dict,   
     previous = bfs_shortest_path(graph, city1, city2)
+    #reconsutruct the path given from previous call
     path = reconstruct_path(previous, city1, city2)
     
     if not path:
